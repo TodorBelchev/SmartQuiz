@@ -1,18 +1,22 @@
 package com.SmartQuiz.api.service;
 
+import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
+import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
 import com.SmartQuiz.api.model.entity.UserEntity;
 
 import java.util.List;
 
 public interface UserService {
-    UserEntity saveUser(UserEntity user);
+    UserEntity saveUser(UserRegisterDTO user);
 
     RoleEntity saveRole(RoleEntity role);
 
-    void addRoleToUser(String username, String roleName);
+    void addRoleToUser(AddRoleToUserDTO addRoleToUserDTO);
 
     UserEntity getUser(String username);
 
     List<UserEntity> getUsers();
+
+    void init();
 }

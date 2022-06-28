@@ -1,6 +1,7 @@
 package com.SmartQuiz.api.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
@@ -12,16 +13,30 @@ public class UserEntity extends BaseEntity{
     @Size(min = 3, max = 20)
     private String name;
 
-    @Column
+    @Column(unique = true)
     @Size(min = 3, max = 20)
     private String username;
 
+    @Email
+    private String email;
+
     @Column
-    @Size(min = 3, max = 20)
+    @Size(min = 3)
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles;
+
+    public UserEntity() {
+    }
+
+    public UserEntity(String name, String username, String email, String password, Collection<RoleEntity> roles) {
+        this.name = name;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
     public String getName() {
         return name;
@@ -53,5 +68,13 @@ public class UserEntity extends BaseEntity{
 
     public void setRoles(Collection<RoleEntity> roles) {
         this.roles = roles;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }

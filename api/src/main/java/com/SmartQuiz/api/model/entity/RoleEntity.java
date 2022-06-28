@@ -1,23 +1,28 @@
 package com.SmartQuiz.api.model.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
+import com.SmartQuiz.api.model.enums.RoleEnum;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
 public class RoleEntity extends BaseEntity {
 
-    @Column
-    @Size(min = 3, max = 20)
-    private String name;
+    @Enumerated(value = EnumType.STRING)
+    private RoleEnum name;
 
-    public String getName() {
+    public RoleEntity() {
+    }
+
+    public RoleEntity(RoleEnum name) {
+        this.name = name;
+    }
+
+    public RoleEnum getName() {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(RoleEnum name) {
         this.name = name;
     }
 }
