@@ -1,4 +1,4 @@
-package com.SmartQuiz.api.model.config;
+package com.SmartQuiz.api.config;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
