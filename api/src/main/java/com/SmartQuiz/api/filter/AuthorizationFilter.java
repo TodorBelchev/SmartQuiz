@@ -41,7 +41,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                    });
                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(username, null, authorities);
                    SecurityContextHolder.getContext().setAuthentication(authToken);
-
                } catch (Exception ex) {
                     response.setHeader("error", ex.getMessage());
                     response.sendError(HttpServletResponse.SC_FORBIDDEN);
