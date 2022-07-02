@@ -3,8 +3,7 @@ package com.SmartQuiz.api.filter;
 import com.SmartQuiz.api.model.entity.UserEntity;
 import com.SmartQuiz.api.model.enums.RoleEnum;
 import com.SmartQuiz.api.repo.UserRepo;
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
+import com.SmartQuiz.api.utils.JWTUtils;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,8 +18,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -57,22 +54,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
-        Algorithm algorithm = Algorithm.HMAC256("secret".getBytes(StandardCharsets.UTF_8));
-        String access_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .sign(algorithm);
-        String refresh_token = JWT.create()
-                .withSubject(user.getUsername())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-                .withIssuer(request.getRequestURL().toString())
-                .sign(algorithm);
+        String accessToken = JWTUtils.createAccessToken(user.getUsername(), request.getRequestURL().toString(),
+                user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()));
+        String refreshToken = JWTUtils.createRefreshToken(user.getUsername(), request.getRequestURL().toString());
         UserEntity userEntity = userRepo.findByUsername(user.getUsername());
         Map<String, String> responseBody = new HashMap<>();
-        responseBody.put("access_token", access_token);
-        responseBody.put("refresh_token", refresh_token);
+        responseBody.put("access_token", accessToken);
+        responseBody.put("refresh_token", refreshToken);
         responseBody.put("_id", userEntity.getId().toString());
         responseBody.put("username", user.getUsername());
         boolean isAdmin = userEntity.getRoles().stream().filter(r -> r.getName().equals(RoleEnum.ROLE_ADMIN)).collect(Collectors.toList()).size() == 1;

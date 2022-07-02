@@ -15,17 +15,18 @@ const login = (username: string, password: string) => {
     }
 };
 
-const register = (email: string, password: string, rePassword: string) => {
+const register = (username: string, email: string, password: string, confirmPassword: string) => {
     return {
-        url: `${REACT_APP_BASE_URL}/users/register`,
+        url: `${REACT_APP_BASE_URL}/user/register`,
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            username,
             email,
             password,
-            rePassword
+            confirmPassword
         })
     }
 };

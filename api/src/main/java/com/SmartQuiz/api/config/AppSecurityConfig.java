@@ -43,7 +43,7 @@ public class AppSecurityConfig {
         http.authenticationManager(authenticationManager);
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.authorizeRequests().antMatchers("/user/login").permitAll();
+        http.authorizeRequests().antMatchers("/user/login", "/user/register").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(authFilter);
         http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

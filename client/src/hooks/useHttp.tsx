@@ -1,7 +1,5 @@
 import { useState, useCallback, useEffect } from 'react';
 
-// import { authActions } from '../store/auth';
-// import { modalActions } from '../store/modal';
 import { notificationActions } from '../store/notification';
 import { useAppDispatch, useAppSelector } from './useRedux';
 
@@ -15,7 +13,7 @@ type reqConfig = {
 const useHttp = () => {
     const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
-    const [error, setError] = useState<string | null>(null);
+    const [error, setError] = useState<string[] | null>(null);
     const notificationState = useAppSelector(state => state.notification);
 
     const sendRequest = useCallback(async (requestConfig: reqConfig, applyData: (arg0: any) => void) => {
@@ -36,22 +34,13 @@ const useHttp = () => {
             
             const data = await response.json();
 
-            if (!response.ok) { throw new Error(data.message); }
+            if (!response.ok) { throw new Error(JSON.stringify(data.messages)); }
 
             setIsLoading(false);
             applyData(data);
         } catch (err) {
-            let errorMessage = (err as Error).message;
-            
-            if (errorMessage === 'Failed to fetch' || errorMessage === '') {
-                errorMessage = 'Something went wrong. Please try again later.'
-            }
-
-            if (errorMessage === 'Please log in') {
-                // dispatch(authActions.logout());
-                // dispatch(modalActions.open('login'));
-            }
-            setError(errorMessage);
+            const errorMessages = JSON.parse((err as Error).message);
+            setError(errorMessages);
             setIsLoading(false);
         }
     }, []);
@@ -60,7 +49,7 @@ const useHttp = () => {
         if (error) {
             dispatch(notificationActions.show({ type: 'error', text: error }));
         }
-        if (notificationState.text === '') {
+        if (notificationState.text.length === 0) {
             setError(null);
         }
     }, [dispatch, error, notificationState.text]);

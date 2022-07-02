@@ -1,5 +1,6 @@
 package com.SmartQuiz.api.service.impl;
 
+import com.SmartQuiz.api.controller.errors.InvalidRegisterUserRequest;
 import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
@@ -16,11 +17,13 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService, UserDetailsService {
@@ -51,7 +54,21 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserEntity saveUser(UserRegisterDTO user) {
+    public UserEntity saveUser(UserRegisterDTO user, BindingResult bindingResult) {
+        boolean passwordsMatch = user.getPassword().equals(user.getConfirmPassword());
+
+        if (bindingResult.hasErrors() || !passwordsMatch) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(e -> String.format("%s", e.getDefaultMessage())).collect(Collectors.toList());
+
+            if (!passwordsMatch) {
+                errors.add("Passwords must match!");
+            }
+
+            throw new InvalidRegisterUserRequest(errors);
+        }
+
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepo.save(userEntity);
@@ -87,7 +104,7 @@ public class UserServiceImpl implements UserService, UserDetailsService {
             return;
         }
 
-        UserEntity user = new UserEntity("Admin",
+        UserEntity user = new UserEntity(
                 "admin",
                 "admin@abv.bg",
                 passwordEncoder.encode("123"),

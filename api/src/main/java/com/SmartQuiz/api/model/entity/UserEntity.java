@@ -9,10 +9,6 @@ import java.util.Collection;
 @Table(name = "users")
 public class UserEntity extends BaseEntity{
 
-    @Column
-    @Size(min = 3, max = 20)
-    private String name;
-
     @Column(unique = true)
     @Size(min = 3, max = 20)
     private String username;
@@ -30,20 +26,11 @@ public class UserEntity extends BaseEntity{
     public UserEntity() {
     }
 
-    public UserEntity(String name, String username, String email, String password, Collection<RoleEntity> roles) {
-        this.name = name;
+    public UserEntity(String username, String email, String password, Collection<RoleEntity> roles) {
         this.username = username;
         this.email = email;
         this.password = password;
         this.roles = roles;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUsername() {

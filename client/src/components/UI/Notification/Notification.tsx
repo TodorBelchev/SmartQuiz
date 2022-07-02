@@ -1,4 +1,4 @@
-import { Alert, AlertTitle, Snackbar } from "@mui/material";
+import { Alert, Snackbar, Typography } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useRedux";
 import { notificationActions } from "../../../store/notification";
@@ -28,7 +28,9 @@ const Notification: React.FC = () => {
             open={show}
             onClose={closeNotificationHandler}>
             <Alert severity="error" sx={{ width: '100%' }}>
-                {notificationState.text}
+                {notificationState.text.map(n => (
+                    <Typography variant="body1">{n}</Typography>
+                ))}
             </Alert>
         </Snackbar>
     )

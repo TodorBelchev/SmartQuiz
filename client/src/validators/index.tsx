@@ -1,9 +1,11 @@
 import { isEmail } from "./isEmail";
 import { minLength } from "./minLength";
+import { stringMatch } from "./stringMatch";
 
 const validators = {
     isEmail,
-    minLength
+    minLength,
+    stringMatch
 }
 
 export default validators;

@@ -4,11 +4,12 @@ import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
 import com.SmartQuiz.api.model.entity.UserEntity;
+import org.springframework.validation.BindingResult;
 
 import java.util.List;
 
 public interface UserService {
-    UserEntity saveUser(UserRegisterDTO user);
+    UserEntity saveUser(UserRegisterDTO user, BindingResult bindingResult);
 
     RoleEntity saveRole(RoleEntity role);
 
