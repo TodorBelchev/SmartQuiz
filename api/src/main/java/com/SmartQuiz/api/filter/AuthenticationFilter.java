@@ -1,5 +1,9 @@
 package com.SmartQuiz.api.filter;
 
+import com.SmartQuiz.api.model.entity.UserEntity;
+import com.SmartQuiz.api.model.enums.RoleEnum;
+import com.SmartQuiz.api.model.validator.ValidRoleEnum;
+import com.SmartQuiz.api.repo.UserRepo;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -27,9 +31,11 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private final UserRepo userRepo;
 
-    public AuthenticationFilter(AuthenticationManager authenticationManager) {
+    public AuthenticationFilter(AuthenticationManager authenticationManager, UserRepo userRepo) {
         this.authenticationManager = authenticationManager;
+        this.userRepo = userRepo;
     }
 
     @Override
@@ -55,10 +61,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                 .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", access_token);
-        tokens.put("refresh_token", refresh_token);
+        UserEntity userEntity = userRepo.findByUsername(user.getUsername());
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("access_token", access_token);
+        responseBody.put("refresh_token", refresh_token);
+        responseBody.put("_id", userEntity.getId().toString());
+        responseBody.put("username", user.getUsername());
+        boolean isAdmin = userEntity.getRoles().stream().filter(r -> r.getName().equals(RoleEnum.ROLE_ADMIN)).collect(Collectors.toList()).size() == 1;
+        responseBody.put("isAdmin", String.valueOf(isAdmin));
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
 }

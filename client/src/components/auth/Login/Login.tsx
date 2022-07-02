@@ -1,6 +1,8 @@
 import { Button, Grid, TextField, Typography } from "@mui/material";
 import { FormEvent } from "react";
 import useHttp from "../../../hooks/useHttp";
+import { useAppDispatch } from "../../../hooks/useRedux";
+import { authActions } from "../../../store/auth";
 import useUserInput from "../../../hooks/useUserInput";
 import userOptions from "../../../utils/userOptions";
 import validators from "../../../validators";
@@ -9,6 +11,7 @@ import classes from "./Login.module.css";
 
 const Login: React.FC = () => {
     const { isLoading, sendRequest } = useHttp();
+    const dispatch = useAppDispatch();
     const {
         value: usernameValue,
         isValid: usernameIsValid,
@@ -31,6 +34,7 @@ const Login: React.FC = () => {
         console.log("here");
 
         console.log(response);
+        dispatch(authActions.login(response))
 
         // throw new Error("Function not implemented.");
     }
