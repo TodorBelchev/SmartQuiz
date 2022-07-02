@@ -2,8 +2,8 @@ import { useState, useCallback, useEffect } from 'react';
 
 // import { authActions } from '../store/auth';
 // import { modalActions } from '../store/modal';
-// import { notificationActions } from '../store/notification';
-// import { useAppDispatch, useAppSelector } from './reduxHooks';
+import { notificationActions } from '../store/notification';
+import { useAppDispatch, useAppSelector } from './useRedux';
 
 type reqConfig = {
     url: string;
@@ -13,10 +13,10 @@ type reqConfig = {
 }
 
 const useHttp = () => {
-    // const dispatch = useAppDispatch();
+    const dispatch = useAppDispatch();
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    // const notificationState = useAppSelector(state => state.notification);
+    const notificationState = useAppSelector(state => state.notification);
 
     const sendRequest = useCallback(async (requestConfig: reqConfig, applyData: (arg0: any) => void) => {
         setIsLoading(true);
@@ -30,6 +30,10 @@ const useHttp = () => {
                 body: requestConfig.body || null
             });
 
+            if (!response.ok  && requestConfig.url.endsWith("/login")) {
+                throw new Error("Invalid credentials");
+            }
+            
             const data = await response.json();
 
             if (!response.ok) { throw new Error(data.message); }
@@ -38,6 +42,7 @@ const useHttp = () => {
             applyData(data);
         } catch (err) {
             let errorMessage = (err as Error).message;
+            
             if (errorMessage === 'Failed to fetch' || errorMessage === '') {
                 errorMessage = 'Something went wrong. Please try again later.'
             }
@@ -51,14 +56,14 @@ const useHttp = () => {
         }
     }, []);
 
-    // useEffect(() => {
-    //     if (error) {
-    //         dispatch(notificationActions.show({ type: 'error', text: error }));
-    //     }
-    //     if (notificationState.text === '') {
-    //         setError(null);
-    //     }
-    // }, [dispatch, error, notificationState.text]);
+    useEffect(() => {
+        if (error) {
+            dispatch(notificationActions.show({ type: 'error', text: error }));
+        }
+        if (notificationState.text === '') {
+            setError(null);
+        }
+    }, [dispatch, error, notificationState.text]);
 
     return {
         isLoading,

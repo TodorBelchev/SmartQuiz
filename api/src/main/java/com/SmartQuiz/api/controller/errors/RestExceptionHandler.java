@@ -15,10 +15,10 @@ import java.nio.file.AccessDeniedException;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-//    @ExceptionHandler(AccessDeniedException.class)
-//    public ResponseEntity<Object> handleAccessDeniedException(HttpServletRequest req, AccessDeniedException ex) {
-//        return buildResponse(new ErrorResponse(HttpStatus.UNAUTHORIZED, "access_denied"));
-//    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Object> handleAccessDeniedException(HttpServletRequest req, AccessDeniedException ex) {
+        return buildResponse(new ErrorResponse(HttpStatus.UNAUTHORIZED, "access_denied"));
+    }
 
     private ResponseEntity<Object> buildResponse(ErrorResponse errorResponse) {
         return new ResponseEntity<Object>(errorResponse, errorResponse.getStatus());

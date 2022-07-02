@@ -2,7 +2,6 @@ package com.SmartQuiz.api.filter;
 
 import com.SmartQuiz.api.model.entity.UserEntity;
 import com.SmartQuiz.api.model.enums.RoleEnum;
-import com.SmartQuiz.api.model.validator.ValidRoleEnum;
 import com.SmartQuiz.api.repo.UserRepo;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
@@ -44,6 +43,15 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String password = request.getParameter("password");
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken =  new UsernamePasswordAuthenticationToken(username, password);
         return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
+    }
+
+    @Override
+    protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("error", failed.getMessage());
+        response.setContentType(APPLICATION_JSON_VALUE);
+        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+        new ObjectMapper().writeValue(response.getOutputStream(), responseBody);
     }
 
     @Override
