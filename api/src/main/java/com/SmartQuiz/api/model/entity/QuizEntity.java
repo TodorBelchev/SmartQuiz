@@ -22,13 +22,17 @@ public class QuizEntity extends BaseEntity {
     @OneToMany(fetch = FetchType.EAGER)
     private Collection<QuizResultEntity> results;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private CategoryEntity category;
+
     public QuizEntity() {
     }
 
-    public QuizEntity(String title, Collection<QuestionEntity> questions, UserEntity creator) {
+    public QuizEntity(String title, Collection<QuestionEntity> questions, UserEntity creator, CategoryEntity category) {
         this.title = title;
         this.questions = questions;
         this.creator = creator;
+        this.category = category;
         this.results = new ArrayList<>();
     }
 
@@ -62,5 +66,13 @@ public class QuizEntity extends BaseEntity {
 
     public void setResults(Collection<QuizResultEntity> results) {
         this.results = results;
+    }
+
+    public CategoryEntity getCategory() {
+        return category;
+    }
+
+    public void setCategory(CategoryEntity category) {
+        this.category = category;
     }
 }
