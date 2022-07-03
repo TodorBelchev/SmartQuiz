@@ -3,11 +3,12 @@ package com.SmartQuiz.api.model.entity;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
 import java.util.Collection;
 
 @Entity
 @Table(name = "users")
-public class UserEntity extends BaseEntity{
+public class UserEntity extends BaseEntity {
 
     @Column(unique = true)
     @Size(min = 3, max = 20)
@@ -23,6 +24,12 @@ public class UserEntity extends BaseEntity{
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<RoleEntity> roles;
 
+    @OneToMany(fetch = FetchType.EAGER)
+    private Collection<QuizEntity> createdQuizzes;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    private Collection<QuizEntity> completedQuizzes;
+
     public UserEntity() {
     }
 
@@ -31,6 +38,8 @@ public class UserEntity extends BaseEntity{
         this.email = email;
         this.password = password;
         this.roles = roles;
+        this.createdQuizzes = new ArrayList<>();
+        this.completedQuizzes = new ArrayList<>();
     }
 
     public String getUsername() {
@@ -63,5 +72,21 @@ public class UserEntity extends BaseEntity{
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Collection<QuizEntity> getCreatedQuizzes() {
+        return createdQuizzes;
+    }
+
+    public void setCreatedQuizzes(Collection<QuizEntity> createdQuizzes) {
+        this.createdQuizzes = createdQuizzes;
+    }
+
+    public Collection<QuizEntity> getCompletedQuizzes() {
+        return completedQuizzes;
+    }
+
+    public void setCompletedQuizzes(Collection<QuizEntity> completedQuizzes) {
+        this.completedQuizzes = completedQuizzes;
     }
 }
