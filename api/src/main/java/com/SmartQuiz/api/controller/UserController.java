@@ -1,20 +1,17 @@
 package com.SmartQuiz.api.controller;
 
-import com.SmartQuiz.api.controller.errors.InvalidRegisterUserRequest;
 import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.UserEntity;
 import com.SmartQuiz.api.service.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/user")

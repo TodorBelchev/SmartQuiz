@@ -1,5 +1,5 @@
-import { Container } from "@mui/system";
 import Notification from "../../UI/Notification/Notification";
+import Navigation from "../Navigation/Navigation";
 
 interface Props {
     children: React.ReactNode
@@ -9,12 +9,10 @@ const Layout: React.FC<Props> = (props) => {
 
     return (
         <>
-            <main>
-                <Container>
-                    <Notification />
-                    {props.children}
-                </Container>
-            </main>
+            <Navigation>
+                <Notification />
+                {props.children}
+            </Navigation>
         </>
     );
 }
