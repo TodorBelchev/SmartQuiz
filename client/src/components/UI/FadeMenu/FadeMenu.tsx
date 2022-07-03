@@ -23,7 +23,7 @@ const FadeMenu: React.FC<Props> = ({ items, title }) => {
     };
 
     return (
-        <Box>
+        <Box sx={{ display: { xs: 'none', sm: 'block' }, minWidth: '75px', textAlign: 'center' }}>
             <Button
                 id="fade-button"
                 aria-controls={open ? 'fade-menu' : undefined}
@@ -45,7 +45,7 @@ const FadeMenu: React.FC<Props> = ({ items, title }) => {
                 TransitionComponent={Fade}
             >
                 {items.map(i => (
-                    <MenuItem onClick={handleClose}>
+                    <MenuItem key={i.to} onClick={handleClose}>
                         <Link to={i.to}>{i.text}</Link>
                     </MenuItem>
                 ))}

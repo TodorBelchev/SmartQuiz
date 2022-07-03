@@ -1,4 +1,5 @@
 import Notification from "../../UI/Notification/Notification";
+import Footer from "../Footer/Footer";
 import Navigation from "../Navigation/Navigation";
 
 interface Props {
@@ -13,6 +14,7 @@ const Layout: React.FC<Props> = (props) => {
                 <Notification />
                 {props.children}
             </Navigation>
+            <Footer />
         </>
     );
 }

@@ -112,7 +112,7 @@ const Navigation: React.FC<Props> = (props: Props) => {
     const container = window !== undefined ? () => window().document.body : undefined;
 
     return (
-        <Box sx={{ display: 'flex' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', flexGrow: '1' }}>
             <AppBar component="nav">
                 <Box sx={{ margin: '0 auto', maxWidth: '1200px', width: '100%' }}>
                     <Toolbar sx={{ margin: '0 auto' }}>
