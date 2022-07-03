@@ -17,6 +17,8 @@ public interface UserService {
 
     UserEntity getUser(String username);
 
+    UserEntity getById(Long id);
+
     List<UserEntity> getUsers();
 
     void init();

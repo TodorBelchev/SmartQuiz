@@ -1,6 +1,7 @@
 package com.SmartQuiz.api.service.impl;
 
 import com.SmartQuiz.api.controller.errors.InvalidRegisterUserRequest;
+import com.SmartQuiz.api.controller.errors.ResourceNotFound;
 import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
@@ -23,6 +24,7 @@ import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -90,6 +92,15 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserEntity getUser(String username) {
         return userRepo.findByUsername(username);
+    }
+
+    @Override
+    public UserEntity getById(Long id) {
+        Optional<UserEntity> user = userRepo.findById(id);
+        if (user.isEmpty()) {
+            throw new ResourceNotFound(List.of(String.format("Resource with id: %d was not found!", id)));
+        }
+        return user.get();
     }
 
     @Override

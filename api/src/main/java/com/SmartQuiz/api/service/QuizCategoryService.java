@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface QuizCategoryService {
     void init();
 
-    Optional<CategoryEntity> findByCategoryNameEnum(QuizCategoryEnum category);
+    CategoryEntity findByCategoryNameEnum(QuizCategoryEnum category);
 }
