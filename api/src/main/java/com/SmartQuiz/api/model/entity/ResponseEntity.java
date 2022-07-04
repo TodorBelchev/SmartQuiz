@@ -10,7 +10,7 @@ import javax.validation.constraints.Size;
 public class ResponseEntity extends BaseEntity {
 
     @Column
-    @Size(min = 10, max = 255)
+    @Size(min = 1, max = 255)
     private String text;
 
     public ResponseEntity() {

@@ -26,6 +26,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
         return buildResponse(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrors()));
     }
 
+    @ExceptionHandler(InvalidAddQuizRequest.class)
+    public ResponseEntity<Object> handleInvalidAddQuizRequest(HttpServletRequest req, InvalidAddQuizRequest ex) {
+        return buildResponse(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrors()));
+    }
+
     private ResponseEntity<Object> buildResponse(ErrorResponse errorResponse) {
         return new ResponseEntity<Object>(errorResponse, errorResponse.getStatus());
     }

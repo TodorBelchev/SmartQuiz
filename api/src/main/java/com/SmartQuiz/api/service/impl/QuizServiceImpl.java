@@ -1,5 +1,6 @@
 package com.SmartQuiz.api.service.impl;
 
+import com.SmartQuiz.api.controller.errors.InvalidAddQuizRequest;
 import com.SmartQuiz.api.model.dto.AddQuizDTO;
 import com.SmartQuiz.api.model.entity.*;
 import com.SmartQuiz.api.model.enums.QuizCategoryEnum;
@@ -11,6 +12,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuizServiceImpl implements QuizService {
@@ -33,6 +35,15 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public QuizEntity addQuiz(AddQuizDTO addQuizDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(e -> String.format("%s", e.getDefaultMessage())).collect(Collectors.toList());
+
+            throw new InvalidAddQuizRequest(errors);
+        }
+
         QuizEntity quiz = new QuizEntity();
         UserEntity creator = userService.getById(addQuizDTO.getCreator());
         List<QuestionEntity> questions = new ArrayList<>();

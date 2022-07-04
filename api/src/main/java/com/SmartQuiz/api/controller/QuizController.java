@@ -29,6 +29,9 @@ public class QuizController {
 
     @PostMapping("/add")
     public ResponseEntity<QuizEntity> addQuiz(@RequestBody @Valid AddQuizDTO addQuizDTO, BindingResult bindingResult) {
+        bindingResult.getAllErrors().forEach(e -> {
+            System.out.println(e.getDefaultMessage());
+        });
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/add").toUriString());
         return ResponseEntity.created(uri).body(quizService.addQuiz(addQuizDTO, bindingResult));
     }

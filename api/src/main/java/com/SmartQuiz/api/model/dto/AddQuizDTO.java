@@ -1,19 +1,23 @@
 package com.SmartQuiz.api.model.dto;
 
-import com.SmartQuiz.api.model.entity.QuestionEntity;
-
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class AddQuizDTO {
 
+    @Size(min = 5, max = 255, message = "Quiz title must be between 5 and 255 characters!")
     private String title;
 
+    @NotNull(message = "Creator is required!")
     private Long creator;
 
     @Valid
     private Collection<QuestionDTO> questions;
 
+    @NotBlank(message = "Category is required!")
     private String category;
 
     public AddQuizDTO() {

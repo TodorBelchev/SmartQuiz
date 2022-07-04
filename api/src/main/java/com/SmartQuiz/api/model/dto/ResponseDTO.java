@@ -1,9 +1,12 @@
 package com.SmartQuiz.api.model.dto;
 
+import javax.validation.constraints.Size;
+
 public class ResponseDTO {
 
     private Long id;
 
+    @Size(min = 1, max = 255, message = "Response must be between 1 and 255 characters!")
     private String text;
 
     public ResponseDTO() {

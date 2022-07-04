@@ -9,7 +9,7 @@ import java.util.Collection;
 public class QuestionEntity extends BaseEntity {
 
     @Column
-    @Size(min = 10, max = 255)
+    @Size(min = 5, max = 255)
     private String text;
 
     @Column

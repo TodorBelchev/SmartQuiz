@@ -6,7 +6,6 @@ import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
 import com.SmartQuiz.api.model.entity.UserEntity;
-import com.SmartQuiz.api.model.enums.RoleEnum;
 import com.SmartQuiz.api.repo.RoleRepo;
 import com.SmartQuiz.api.repo.UserRepo;
 import com.SmartQuiz.api.service.UserService;
@@ -92,6 +91,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Override
     public UserEntity getUser(String username) {
         return userRepo.findByUsername(username);
+    }
+
+    @Override
+    public UserEntity getByEmail(String email) {
+        return userRepo.findByEmail(email);
     }
 
     @Override

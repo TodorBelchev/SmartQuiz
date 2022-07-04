@@ -1,12 +1,17 @@
 package com.SmartQuiz.api.model.dto;
 
+
 import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import java.util.Collection;
 
 public class QuestionDTO {
 
+    @Size(min = 5, max = 255,message = "Question must be between 5 and 255 characters!")
     private String text;
 
+    @NotBlank(message = "Correct response must not be blank!")
     private String correctResponse;
 
     @Valid
