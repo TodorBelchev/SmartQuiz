@@ -29,7 +29,7 @@ const useHttp = () => {
             });
 
             if (!response.ok  && requestConfig.url.endsWith("/login")) {
-                throw new Error("Invalid credentials");
+                throw new Error(JSON.stringify(["Invalid credentials"]));
             }
             
             const data = await response.json();

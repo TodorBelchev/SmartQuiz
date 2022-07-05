@@ -1,3 +1,4 @@
+import { Container } from "@mui/system";
 import Notification from "../../UI/Notification/Notification";
 import Footer from "../Footer/Footer";
 import Navigation from "../Navigation/Navigation";
@@ -12,7 +13,9 @@ const Layout: React.FC<Props> = (props) => {
         <>
             <Navigation>
                 <Notification />
-                {props.children}
+                <Container>
+                    {props.children}
+                </Container>
             </Navigation>
             <Footer />
         </>

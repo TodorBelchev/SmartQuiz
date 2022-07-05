@@ -28,8 +28,8 @@ const Notification: React.FC = () => {
             open={show}
             onClose={closeNotificationHandler}>
             <Alert severity="error" sx={{ width: '100%' }}>
-                {notificationState.text.map(n => (
-                    <Typography variant="body1">{n}</Typography>
+                {notificationState.text.map((n, i) => (
+                    <Typography variant="body1" key={i}>{n}</Typography>
                 ))}
             </Alert>
         </Snackbar>
