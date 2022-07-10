@@ -37,7 +37,7 @@ const Login: React.FC = () => {
         formIsValid = true;
     }
 
-    function processResponse(response: any) {
+    const processResponse = (response: any) => {
         resetUsername();
         resetPassword();
         dispatch(authActions.login(response));

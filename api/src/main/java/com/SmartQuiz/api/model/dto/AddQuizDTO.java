@@ -20,14 +20,18 @@ public class AddQuizDTO {
     @NotBlank(message = "Category is required!")
     private String category;
 
+    @NotNull
+    private Long duration;
+
     public AddQuizDTO() {
     }
 
-    public AddQuizDTO(String title, Long creator, Collection<QuestionDTO> questions, String category) {
+    public AddQuizDTO(String title, Long creator, Collection<QuestionDTO> questions, String category, Long duration) {
         this.title = title;
         this.creator = creator;
         this.questions = questions;
         this.category = category;
+        this.duration = duration;
     }
 
     public String getTitle() {
@@ -60,5 +64,13 @@ public class AddQuizDTO {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 }

@@ -15,6 +15,7 @@ const useHttp = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string[] | null>(null);
     const notificationState = useAppSelector(state => state.notification);
+    const user = useAppSelector(state => state.auth);
 
     const sendRequest = useCallback(async (requestConfig: reqConfig, applyData: (arg0: any) => void) => {
         setIsLoading(true);
@@ -24,14 +25,14 @@ const useHttp = () => {
             const response = await fetch(requestConfig.url, {
                 method: requestConfig.method || 'GET',
                 credentials: 'include',
-                headers: requestConfig.headers || {},
+                headers: { ...requestConfig.headers, 'Authorization': `Bearer ${user.access_token}` || '' } || {},
                 body: requestConfig.body || null
             });
 
-            if (!response.ok  && requestConfig.url.endsWith("/login")) {
+            if (!response.ok && requestConfig.url.endsWith("/login")) {
                 throw new Error(JSON.stringify(["Invalid credentials"]));
             }
-            
+
             const data = await response.json();
 
             if (!response.ok) { throw new Error(JSON.stringify(data.messages)); }

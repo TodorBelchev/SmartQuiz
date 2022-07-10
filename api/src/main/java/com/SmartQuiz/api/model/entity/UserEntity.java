@@ -25,9 +25,6 @@ public class UserEntity extends BaseEntity {
     private Collection<RoleEntity> roles;
 
     @OneToMany(fetch = FetchType.EAGER)
-    private Collection<QuizEntity> createdQuizzes;
-
-    @OneToMany(fetch = FetchType.EAGER)
     private Collection<QuizEntity> completedQuizzes;
 
     public UserEntity() {
@@ -38,7 +35,6 @@ public class UserEntity extends BaseEntity {
         this.email = email;
         this.password = password;
         this.roles = roles;
-        this.createdQuizzes = new ArrayList<>();
         this.completedQuizzes = new ArrayList<>();
     }
 
@@ -72,14 +68,6 @@ public class UserEntity extends BaseEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public Collection<QuizEntity> getCreatedQuizzes() {
-        return createdQuizzes;
-    }
-
-    public void setCreatedQuizzes(Collection<QuizEntity> createdQuizzes) {
-        this.createdQuizzes = createdQuizzes;
     }
 
     public Collection<QuizEntity> getCompletedQuizzes() {

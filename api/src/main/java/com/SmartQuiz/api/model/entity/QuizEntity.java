@@ -1,6 +1,7 @@
 package com.SmartQuiz.api.model.entity;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,10 +14,14 @@ public class QuizEntity extends BaseEntity {
     @Size(min = 5, max = 255)
     private String title;
 
+    @Column
+    @NotNull
+    private Long duration;
+
     @OneToMany(fetch = FetchType.EAGER)
     private Collection<QuestionEntity> questions;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity creator;
 
     @OneToMany(fetch = FetchType.EAGER)
@@ -28,12 +33,13 @@ public class QuizEntity extends BaseEntity {
     public QuizEntity() {
     }
 
-    public QuizEntity(String title, Collection<QuestionEntity> questions, UserEntity creator, CategoryEntity category) {
+    public QuizEntity(String title, Collection<QuestionEntity> questions, UserEntity creator, CategoryEntity category, Long duration) {
         this.title = title;
         this.questions = questions;
         this.creator = creator;
         this.category = category;
         this.results = new ArrayList<>();
+        this.duration = duration;
     }
 
     public String getTitle() {
@@ -74,5 +80,13 @@ public class QuizEntity extends BaseEntity {
 
     public void setCategory(CategoryEntity category) {
         this.category = category;
+    }
+
+    public Long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(Long duration) {
+        this.duration = duration;
     }
 }

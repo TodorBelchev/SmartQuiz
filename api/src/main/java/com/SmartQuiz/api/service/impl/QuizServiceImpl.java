@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -47,7 +48,7 @@ public class QuizServiceImpl implements QuizService {
         QuizEntity quiz = new QuizEntity();
         UserEntity creator = userService.getById(addQuizDTO.getCreator());
         List<QuestionEntity> questions = new ArrayList<>();
-        CategoryEntity category = quizCategoryService.findByCategoryNameEnum(modelMapper.map(addQuizDTO.getCategory(), QuizCategoryEnum.class));
+        CategoryEntity category = quizCategoryService.findByCategoryNameEnum(modelMapper.map(addQuizDTO.getCategory().toUpperCase(Locale.ROOT), QuizCategoryEnum.class));
 
 
         addQuizDTO.getQuestions().forEach(questionDTO -> {
@@ -73,6 +74,7 @@ public class QuizServiceImpl implements QuizService {
         quiz.setTitle(addQuizDTO.getTitle());
         quiz.setQuestions(questions);
         quiz.setCategory(category);
+        quiz.setDuration(addQuizDTO.getDuration());
         return quizRepo.save(quiz);
     }
 

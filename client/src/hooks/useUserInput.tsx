@@ -1,3 +1,4 @@
+import { SelectChangeEvent } from "@mui/material";
 import React, { useState } from "react";
 
 const useUserInput = (validator: (value: string) => {}) => {
@@ -7,7 +8,7 @@ const useUserInput = (validator: (value: string) => {}) => {
     const valueIsValid = validator(inputValue);
     const hasError = !valueIsValid && isTouched;
 
-    const valueChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+    const valueChangeHandler = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement> | SelectChangeEvent) => {
         setInputValue(e.target.value);
     };
 

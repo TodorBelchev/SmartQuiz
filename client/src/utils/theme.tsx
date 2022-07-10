@@ -7,7 +7,8 @@ export const themeOptions: ThemeOptions = {
             contrastText: '#fafafa',
         },
         secondary: {
-            main: '#f50057',
+            main: '#e65100',
+            contrastText: '#ffebee',
         },
     },
 };
