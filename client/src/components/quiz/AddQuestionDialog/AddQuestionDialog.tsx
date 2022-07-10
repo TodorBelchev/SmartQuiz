@@ -1,4 +1,4 @@
-import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Select, MenuItem, FormControl, InputLabel, Alert, Grid } from "@mui/material";
+import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Select, MenuItem, FormControl, InputLabel, Alert } from "@mui/material";
 import { useEffect } from "react";
 import useUserInput from "../../../hooks/useUserInput";
 import IQuestion from "../../../interfaces/IQuestion";
@@ -96,9 +96,6 @@ const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, ques
             { text: responseThreeValue },
             { text: responseFourValue }
         ];
-
-        console.log(responses[Number(correctResponseValue)].text);
-
 
         onAddQuestion({
             text: textValue,

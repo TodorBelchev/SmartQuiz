@@ -44,7 +44,7 @@ const useHttp = () => {
             setError(errorMessages);
             setIsLoading(false);
         }
-    }, []);
+    }, [user.access_token]);
 
     useEffect(() => {
         if (error) {

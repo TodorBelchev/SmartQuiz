@@ -1,6 +1,7 @@
 import { Alert, Button, Card, CardActions, CardContent, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
 import { FormEvent, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useCallbackPrompt from "../../../hooks/useCallbackPrompt";
 import useHttp from "../../../hooks/useHttp";
 import { useAppSelector } from "../../../hooks/useRedux";
 import useUserInput from "../../../hooks/useUserInput";
@@ -20,6 +21,8 @@ const CreateQuiz: React.FC = () => {
     const [questions, setQuestions] = useState<IQuestion[]>([]);
     const [questionToEdit, setQuestionToEdit] = useState<IQuestion | null>(null);
     const [questionIndexToDelete, setQuestionIndexToDelete] = useState<number | null>(null);
+    const [showDialog, setShowDialog] = useState(false);
+    const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(showDialog);
 
     const {
         value: titleValue,
@@ -68,7 +71,8 @@ const CreateQuiz: React.FC = () => {
                 return oldValue;
             })
         } else {
-            setQuestions(oldValue => [...oldValue, q])
+            setQuestions(oldValue => [...oldValue, q]);
+            setShowDialog(true);
         }
     };
 
@@ -84,6 +88,17 @@ const CreateQuiz: React.FC = () => {
         });
         closeConfirmDialog();
         setQuestionIndexToDelete(null);
+
+        if (questions.length === 0) {
+            setShowDialog(false);
+        }
+    }
+
+    const redirectHandler = (navigationAction: boolean | (() => void)) => {
+        if (typeof navigationAction === 'function') {
+            navigationAction();
+        }
+        return navigationAction;
     }
 
     let formIsValid = false;
@@ -113,6 +128,13 @@ const CreateQuiz: React.FC = () => {
 
     return (
         <form onSubmit={submitHandler}>
+            <ConfirmDialog
+                open={!!showPrompt}
+                content="There is not saved progress. Are you sure you want to leave?"
+                title="Warning"
+                isLoading={isLoading}
+                onClose={() => redirectHandler(cancelNavigation)}
+                onConfirm={() => redirectHandler(confirmNavigation)} />
             <Grid container spacing={3} textAlign='center'>
                 <Grid item xs={12}>
                     <Typography variant='h3' component='h1'>Add quiz</Typography>
@@ -127,7 +149,10 @@ const CreateQuiz: React.FC = () => {
                         error={titleHasError}
                         disabled={isLoading}
                         value={titleValue}
-                        onChange={titleChangeHandler}
+                        onChange={(e) => {
+                            titleChangeHandler(e);
+                            setShowDialog(true);
+                        }}
                         onBlur={titleBlurHandler} />
                 </Grid>
                 {titleHasError && <Grid item xs={12}>
@@ -145,7 +170,10 @@ const CreateQuiz: React.FC = () => {
                             error={categoryHasError}
                             disabled={isLoading}
                             value={categoryValue}
-                            onChange={categoryChangeHandler}
+                            onChange={(e) => {
+                                categoryChangeHandler(e);
+                                setShowDialog(true);
+                            }}
                             onBlur={categoryBlurHandler} >
                             <MenuItem value='JavaScript'>JavaScript</MenuItem>
                             <MenuItem value='Java'>Java</MenuItem>
@@ -169,7 +197,10 @@ const CreateQuiz: React.FC = () => {
                             error={durationHasError}
                             disabled={isLoading}
                             value={durationValue}
-                            onChange={durationChangeHandler}
+                            onChange={(e) => {
+                                durationChangeHandler(e);
+                                setShowDialog(true);
+                            }}
                             onBlur={durationBlurHandler} >
                             <MenuItem value='10'>10</MenuItem>
                             <MenuItem value='15'>15</MenuItem>
