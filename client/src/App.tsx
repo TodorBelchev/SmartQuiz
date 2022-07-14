@@ -4,6 +4,7 @@ import Login from './components/auth/Login/Login';
 import Register from './components/auth/Register/Register';
 import Layout from './components/layout/Layout/Layout';
 import CreateQuiz from './components/quiz/CreateQuiz/CreateQuiz';
+import QuizList from './components/quiz/QuizList/QuizList';
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path='/user/login' element={<Login />} />
         <Route path='/user/register' element={<Register />} />
         <Route path='/quizzes/add' element={<CreateQuiz />} />
+        <Route path='/quizzes/all' element={<QuizList />} />
       </Routes>
     </Layout>
   );

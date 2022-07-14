@@ -13,9 +13,16 @@ const add = (quiz: IQuiz) => {
     }
 };
 
+const getAll = () => {
+    return {
+        url: `${REACT_APP_BASE_URL}/quiz/all`
+    }
+}
+
 
 const quizOptions = {
-    add
+    add,
+    getAll
 }
 
 export default quizOptions;
