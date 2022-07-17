@@ -18,7 +18,7 @@ public class QuizEntity extends BaseEntity {
     @NotNull
     private Long duration;
 
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<QuestionEntity> questions;
 
     @ManyToOne(fetch = FetchType.EAGER)

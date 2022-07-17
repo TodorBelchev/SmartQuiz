@@ -2,13 +2,11 @@ import { Button, Card, CardActions, CardContent, Grid, Typography } from "@mui/m
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import useHttp from "../../../hooks/useHttp";
-import { useAppSelector } from "../../../hooks/useRedux";
 import IQuiz from "../../../interfaces/IQuiz";
 import quizOptions from "../../../utils/quizOptions";
 
 const QuizList: React.FC = () => {
     const [quizzes, setQuizzes] = useState<IQuiz[]>([]);
-    const user = useAppSelector(state => state.auth);
     const { sendRequest } = useHttp();
 
     const processResponse = (response: IQuiz[]) => {
@@ -31,12 +29,6 @@ const QuizList: React.FC = () => {
                             <Typography variant='h6' sx={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}>{q.title}</Typography>
                         </CardContent>
                         <CardActions sx={{ display: 'flex', justifyContent: 'center' }}>
-                            <Link to={`/quizzes/${q.id}/edit`}>
-                                <Button variant='contained' color='info' size="small">Edit</Button>
-                            </Link>
-                            <Link to={`/quizzes/${q.id}/delete`}>
-                                <Button variant='contained' color='error' size="small">Delete</Button>
-                            </Link>
                             <Link to={`/quizzes/${q.id}`}>
                                 <Button variant='contained' size="small">Details</Button>
                             </Link>

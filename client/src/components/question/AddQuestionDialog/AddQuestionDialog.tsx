@@ -1,17 +1,21 @@
 import { Dialog, DialogTitle, DialogContent, TextField, DialogActions, Button, Select, MenuItem, FormControl, InputLabel, Alert } from "@mui/material";
 import { useEffect } from "react";
+import useHttp from "../../../hooks/useHttp";
 import useUserInput from "../../../hooks/useUserInput";
 import IQuestion from "../../../interfaces/IQuestion";
+import IQuiz from "../../../interfaces/IQuiz";
+import questionOptions from "../../../utils/questionOptions";
 import validators from "../../../validators";
 
 interface Props {
     open: boolean;
-    onClose: () => void;
-    onAddQuestion: (q: IQuestion, isEdit: boolean) => void;
+    quiz: IQuiz;
+    onClose: (quizRes: IQuiz) => void;
     question?: IQuestion | null;
 }
 
-const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, question }) => {
+const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) => {
+    const { isLoading, sendRequest } = useHttp();
     const {
         value: textValue,
         isValid: textIsValid,
@@ -85,6 +89,10 @@ const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, ques
         formIsValid = true;
     }
 
+    const processResponse = (quizRes: IQuiz) => {
+        closeHandler(quizRes);
+    }
+
     const onSubmit = () => {
         if (!formIsValid) {
             return;
@@ -97,15 +105,16 @@ const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, ques
             { text: responseFourValue }
         ];
 
-        onAddQuestion({
+        const question: IQuestion = {
+            correctResponse: responses[Number(correctResponseValue)].text,
             text: textValue,
-            responses,
-            correctResponse: responses[Number(correctResponseValue)].text
-        }, question !== null);
-        closeHandler();
+            responses
+        }
+
+        sendRequest(questionOptions.add(quiz?.id!.toString(), question), processResponse);
     }
 
-    const closeHandler = () => {
+    const closeHandler = (quizRes: IQuiz) => {
         resetText();
         resetCorrectResponse();
         resetResponseOne();
@@ -113,7 +122,7 @@ const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, ques
         resetResponseThree();
         resetResponseFour();
 
-        onClose();
+        onClose(quizRes);
     }
 
     return (
@@ -213,7 +222,7 @@ const AddQuestionDialog: React.FC<Props> = ({ open, onClose, onAddQuestion, ques
                     </Alert>}
             </DialogContent>
             <DialogActions sx={{ padding: '20px' }}>
-                <Button onClick={closeHandler} variant='contained' color='error'>Cancel</Button>
+                <Button onClick={() => closeHandler(quiz!)} variant='contained' color='error'>Cancel</Button>
                 <Button onClick={onSubmit} variant='contained' disabled={!formIsValid}>{question ? 'Edit' : 'Add'}</Button>
             </DialogActions>
         </Dialog>

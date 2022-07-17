@@ -13,7 +13,7 @@ public class QuestionEntity extends BaseEntity {
     private String text;
 
     @Column
-    @OneToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Collection<ResponseEntity> responses;
 
     private Long correctResponse;

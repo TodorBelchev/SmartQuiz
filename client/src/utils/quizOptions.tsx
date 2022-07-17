@@ -19,10 +19,17 @@ const getAll = () => {
     }
 }
 
+const getById = (id: string | undefined) => {
+    return {
+        url: `${REACT_APP_BASE_URL}/quiz/${id}`
+    }
+}
+
 
 const quizOptions = {
     add,
-    getAll
+    getAll,
+    getById
 }
 
 export default quizOptions;

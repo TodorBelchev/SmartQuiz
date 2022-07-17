@@ -6,5 +6,5 @@ export default interface IQuiz {
     duration: number;
     creator: number;
     category: string;
-    questions: IQuestion[];
+    questions?: IQuestion[];
 }

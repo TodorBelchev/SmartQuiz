@@ -6,7 +6,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
-public class AddQuestionDTO {
+public class QuestionDTO {
 
     private Long id;
 
@@ -19,7 +19,7 @@ public class AddQuestionDTO {
     @Valid
     private Collection<ResponseDTO> responses;
 
-    public AddQuestionDTO() {
+    public QuestionDTO() {
     }
 
     public Long getId() {

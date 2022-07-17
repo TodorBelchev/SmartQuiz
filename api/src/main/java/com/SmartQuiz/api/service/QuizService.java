@@ -10,4 +10,8 @@ public interface QuizService {
     QuizEntity addQuiz(AddQuizDTO addQuizDTO, BindingResult bindingResult);
 
     List<QuizEntity> getAll();
+
+    QuizEntity getById(Long quizId);
+
+    QuizEntity save(QuizEntity quiz);
 }

@@ -14,9 +14,6 @@ public class AddQuizDTO {
     @NotNull(message = "Creator is required!")
     private Long creator;
 
-    @Valid
-    private Collection<QuestionDTO> questions;
-
     @NotBlank(message = "Category is required!")
     private String category;
 
@@ -26,10 +23,9 @@ public class AddQuizDTO {
     public AddQuizDTO() {
     }
 
-    public AddQuizDTO(String title, Long creator, Collection<QuestionDTO> questions, String category, Long duration) {
+    public AddQuizDTO(String title, Long creator, String category, Long duration) {
         this.title = title;
         this.creator = creator;
-        this.questions = questions;
         this.category = category;
         this.duration = duration;
     }
@@ -48,14 +44,6 @@ public class AddQuizDTO {
 
     public void setCreator(Long creator) {
         this.creator = creator;
-    }
-
-    public Collection<QuestionDTO> getQuestions() {
-        return questions;
-    }
-
-    public void setQuestions(Collection<QuestionDTO> questions) {
-        this.questions = questions;
     }
 
     public String getCategory() {

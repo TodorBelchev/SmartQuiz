@@ -24,7 +24,7 @@ import static org.springframework.util.MimeTypeUtils.APPLICATION_JSON_VALUE;
 public class AuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        if (request.getServletPath().equals("/user/login")) {
+        if (request.getServletPath().equals("/user/login") || request.getServletPath().equals("/user/register")) {
             filterChain.doFilter(request, response);
         } else {
             String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
