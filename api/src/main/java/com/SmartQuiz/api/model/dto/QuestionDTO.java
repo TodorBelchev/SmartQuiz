@@ -6,9 +6,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Collection;
 
-public class QuestionDTO {
+public class AddQuestionDTO {
 
-    @Size(min = 5, max = 255,message = "Question must be between 5 and 255 characters!")
+    private Long id;
+
+    @Size(min = 5, max = 255, message = "Question must be between 5 and 255 characters!")
     private String text;
 
     @NotBlank(message = "Correct response must not be blank!")
@@ -17,7 +19,15 @@ public class QuestionDTO {
     @Valid
     private Collection<ResponseDTO> responses;
 
-    public QuestionDTO() {
+    public AddQuestionDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getText() {
