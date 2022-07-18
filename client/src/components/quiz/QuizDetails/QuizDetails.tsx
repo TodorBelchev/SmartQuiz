@@ -15,9 +15,8 @@ const QuizDetails: React.FC = () => {
 
     const openQuestionDialog = () => setAddQuestionDialogOpen(true);
 
-    const closeQuestionDialog = (quizRes: IQuiz) => {
+    const closeQuestionDialog = () => {
         setAddQuestionDialogOpen(false);
-        setQuiz(quizRes);
     };
 
     const deleteQuestionHandler = (quizRes: IQuiz) => {
@@ -38,12 +37,12 @@ const QuizDetails: React.FC = () => {
                 <Typography variant='h3' component='h1'>{quiz?.title}</Typography>
             </Grid>
             <Grid item xs={12} marginBottom={3} >
-                <QuestionList quiz={quiz!} onDeleteQuestion={deleteQuestionHandler} />
+                <QuestionList quiz={quiz!} onDeleteQuestion={deleteQuestionHandler} onAddQuestion={processResponse} onEditQuestion={processResponse}/>
             </Grid>
             <Grid>
                 <Button variant="contained" onClick={openQuestionDialog}>Add question</Button>
             </Grid>
-            <AddQuestionDialog open={addQuestionDialogOpen} onClose={closeQuestionDialog} quiz={quiz!} />
+            <AddQuestionDialog open={addQuestionDialogOpen} onAddQuestion={processResponse} onClose={closeQuestionDialog} quiz={quiz!} />
         </Grid>
     )
 }

@@ -32,6 +32,12 @@ public class QuestionController {
         return ResponseEntity.created(uri).body(modelMapper.map(questionService.addQuestion(addQuestionDTO, bindingResult), QuizViewDTO.class));
     }
 
+    @PutMapping("/{questionId}")
+    public ResponseEntity<QuizViewDTO> editQuestion(@PathVariable Long questionId, @RequestBody @Valid AddQuestionDTO addQuestionDTO, BindingResult bindingResult) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/question/" + questionId).toUriString());
+        return ResponseEntity.created(uri).body(modelMapper.map(questionService.editQuestion(questionId, addQuestionDTO, bindingResult), QuizViewDTO.class));
+    }
+
     @DeleteMapping("/{questionId}/{quizId}")
     public ResponseEntity<QuizViewDTO> deleteQuestion(@PathVariable Long questionId, @PathVariable Long quizId) {
         QuizEntity quizEntity = questionService.deleteById(questionId, quizId);

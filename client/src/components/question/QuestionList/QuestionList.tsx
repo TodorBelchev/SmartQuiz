@@ -10,9 +10,11 @@ import AddQuestionDialog from "../AddQuestionDialog/AddQuestionDialog";
 interface Props {
     quiz: IQuiz;
     onDeleteQuestion: (quiz: IQuiz) => void;
+    onEditQuestion: (quizRes: IQuiz) => void;
+    onAddQuestion: (quizRes: IQuiz) => void;
 }
 
-const QuestionList: React.FC<Props> = ({ quiz, onDeleteQuestion }) => {
+const QuestionList: React.FC<Props> = ({ quiz, onDeleteQuestion, onEditQuestion, onAddQuestion }) => {
     const [editQuestionDialogOpen, setEditQuestionDialogOpen] = useState(false);
     const [confirmDialogOpen, setConfirmDialogOpen] = useState(false);
     const [questionToEdit, setQuestionToEdit] = useState<IQuestion | null>(null);
@@ -52,7 +54,7 @@ const QuestionList: React.FC<Props> = ({ quiz, onDeleteQuestion }) => {
                     </Card>
                 </Grid>
             ))}
-            {quiz && <AddQuestionDialog open={editQuestionDialogOpen} onClose={() => setEditQuestionDialogOpen(false)} quiz={quiz} question={questionToEdit} />}
+            {quiz && <AddQuestionDialog open={editQuestionDialogOpen} onClose={() => setEditQuestionDialogOpen(false)} quiz={quiz} questionToEdit={questionToEdit} onAddQuestion={onAddQuestion} onEditQuestion={onEditQuestion} />}
             <ConfirmDialog
                 open={confirmDialogOpen}
                 title='Delete question'

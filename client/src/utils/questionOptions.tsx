@@ -1,4 +1,5 @@
 import IQuestion from "../interfaces/IQuestion";
+import IQuiz from "../interfaces/IQuiz";
 
 const { REACT_APP_BASE_URL } = process.env;
 
@@ -19,6 +20,17 @@ const add = (quizId: string, question: IQuestion) => {
     }
 }
 
+const edit = (questionId: string, quizId: string, question: IQuestion) => {
+    return {
+        url: `${REACT_APP_BASE_URL}/question/${questionId}`,
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ question, quizId })
+    }
+}
+
 const deleteQuestion = (questionId: string, quizId: string) => {
     return {
         url: `${REACT_APP_BASE_URL}/question/${questionId}/${quizId}`,
@@ -29,6 +41,7 @@ const deleteQuestion = (questionId: string, quizId: string) => {
 const questionOptions = {
     getById,
     add,
+    edit,
     deleteQuestion
 }
 

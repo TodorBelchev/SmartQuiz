@@ -10,11 +10,13 @@ import validators from "../../../validators";
 interface Props {
     open: boolean;
     quiz: IQuiz;
-    onClose: (quizRes: IQuiz) => void;
-    question?: IQuestion | null;
+    onClose: () => void;
+    onAddQuestion: (quizRes: IQuiz) => void;
+    onEditQuestion?: (quizRes: IQuiz) => void;
+    questionToEdit?: IQuestion | null;
 }
 
-const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) => {
+const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, onEditQuestion, onAddQuestion, questionToEdit }) => {
     const { isLoading, sendRequest } = useHttp();
     const {
         value: textValue,
@@ -72,16 +74,16 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) =
     } = useUserInput(validators.minLength.bind(null, 1));
 
     useEffect(() => {
-        if (question) {
-            const correctResponse = question.responses.find(x => x.text === question.correctResponse);
-            setTextValue(question.text);
-            setResponseOneValue(question.responses[0].text);
-            setResponseTwoValue(question.responses[1].text);
-            setResponseThreeValue(question.responses[2].text);
-            setResponseFourValue(question.responses[3].text);
-            setCorrectResponseValue(question.responses.indexOf(correctResponse!).toString());
+        if (questionToEdit) {
+            const correctResponse = questionToEdit.responses.find(x => x.id === questionToEdit.correctResponse);
+            setTextValue(questionToEdit.text);
+            setResponseOneValue(questionToEdit.responses[0].text);
+            setResponseTwoValue(questionToEdit.responses[1].text);
+            setResponseThreeValue(questionToEdit.responses[2].text);
+            setResponseFourValue(questionToEdit.responses[3].text);
+            setCorrectResponseValue((Number(correctResponse?.id) - 1).toString() || '');
         }
-    }, [question, setTextValue, setResponseOneValue, setResponseTwoValue, setResponseThreeValue, setResponseFourValue, setCorrectResponseValue]);
+    }, [questionToEdit, setTextValue, setResponseOneValue, setResponseTwoValue, setResponseThreeValue, setResponseFourValue, setCorrectResponseValue]);
 
     let formIsValid = false;
 
@@ -90,7 +92,12 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) =
     }
 
     const processResponse = (quizRes: IQuiz) => {
-        closeHandler(quizRes);
+        if (onEditQuestion) {
+            onEditQuestion(quizRes);
+        } else {
+            onAddQuestion(quizRes);
+        }
+        closeHandler();
     }
 
     const onSubmit = () => {
@@ -111,10 +118,15 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) =
             responses
         }
 
-        sendRequest(questionOptions.add(quiz?.id!.toString(), question), processResponse);
+        let options = questionOptions.add(quiz?.id!.toString(), question);
+        if (questionToEdit) {
+            options = questionOptions.edit(questionToEdit.id!, quiz?.id!.toString(), question);
+        }
+
+        sendRequest(options, processResponse);
     }
 
-    const closeHandler = (quizRes: IQuiz) => {
+    const closeHandler = () => {
         resetText();
         resetCorrectResponse();
         resetResponseOne();
@@ -122,12 +134,12 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) =
         resetResponseThree();
         resetResponseFour();
 
-        onClose(quizRes);
+        onClose();
     }
 
     return (
-        <Dialog open={open} onClose={closeHandler}>
-            <DialogTitle sx={{ textAlign: 'center' }}>{question ? 'Edit' : 'Add'} question</DialogTitle>
+        <Dialog open={open} onClose={onClose}>
+            <DialogTitle sx={{ textAlign: 'center' }}>{questionToEdit ? 'Edit' : 'Add'} question</DialogTitle>
             <DialogContent>
                 <TextField
                     sx={{ width: '100%', marginBottom: 3, marginTop: 1 }}
@@ -222,8 +234,8 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, question }) =
                     </Alert>}
             </DialogContent>
             <DialogActions sx={{ padding: '20px' }}>
-                <Button onClick={() => closeHandler(quiz!)} variant='contained' color='error'>Cancel</Button>
-                <Button onClick={onSubmit} variant='contained' disabled={!formIsValid}>{question ? 'Edit' : 'Add'}</Button>
+                <Button onClick={onClose} variant='contained' color='error'>Cancel</Button>
+                <Button onClick={onSubmit} variant='contained' disabled={!formIsValid}>{questionToEdit ? 'Edit' : 'Add'}</Button>
             </DialogActions>
         </Dialog>
     )
