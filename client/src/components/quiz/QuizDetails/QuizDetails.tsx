@@ -1,5 +1,6 @@
 import { Button, Grid, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import useHttp from "../../../hooks/useHttp";
 import IQuiz from "../../../interfaces/IQuiz";
@@ -37,10 +38,13 @@ const QuizDetails: React.FC = () => {
                 <Typography variant='h3' component='h1'>{quiz?.title}</Typography>
             </Grid>
             <Grid item xs={12} marginBottom={3} >
-                <QuestionList quiz={quiz!} onDeleteQuestion={deleteQuestionHandler} onAddQuestion={processResponse} onEditQuestion={processResponse}/>
+                <QuestionList quiz={quiz!} onDeleteQuestion={deleteQuestionHandler} onAddQuestion={processResponse} onEditQuestion={processResponse} />
             </Grid>
             <Grid>
                 <Button variant="contained" onClick={openQuestionDialog}>Add question</Button>
+                <Link to={`/quizzes/${quizId}/edit`}>
+                    <Button variant="contained" color="secondary">Edit quiz</Button>
+                </Link>
             </Grid>
             <AddQuestionDialog open={addQuestionDialogOpen} onAddQuestion={processResponse} onClose={closeQuestionDialog} quiz={quiz!} />
         </Grid>

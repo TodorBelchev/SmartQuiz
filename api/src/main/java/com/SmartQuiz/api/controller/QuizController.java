@@ -43,4 +43,11 @@ public class QuizController {
         URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/add").toUriString());
         return ResponseEntity.created(uri).body(modelMapper.map(quizService.addQuiz(addQuizDTO, bindingResult), QuizViewDTO.class));
     }
+
+    @PutMapping("/{quizId}/edit")
+    public ResponseEntity<QuizViewDTO> editQuiz(@PathVariable Long quizId,
+                                                @RequestBody @Valid AddQuizDTO addQuizDTO, BindingResult bindingResult) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/"+ quizId + "/edit").toUriString());
+        return ResponseEntity.created(uri).body(modelMapper.map(quizService.editQuiz(quizId, addQuizDTO, bindingResult), QuizViewDTO.class));
+    }
 }

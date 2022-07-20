@@ -53,6 +53,25 @@ public class QuizServiceImpl implements QuizService {
     }
 
     @Override
+    public QuizEntity editQuiz(Long quizId, AddQuizDTO addQuizDTO, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            List<String> errors = bindingResult.getAllErrors()
+                    .stream()
+                    .map(e -> String.format("%s", e.getDefaultMessage())).collect(Collectors.toList());
+
+            throw new InvalidAddQuizRequest(errors);
+        }
+
+        QuizEntity quiz = getById(quizId);
+        CategoryEntity category = quizCategoryService.findByCategoryNameEnum(modelMapper.map(addQuizDTO.getCategory().toUpperCase(Locale.ROOT), QuizCategoryEnum.class));
+        quiz.setTitle(addQuizDTO.getTitle());
+        quiz.setCategory(category);
+        quiz.setDuration(addQuizDTO.getDuration());
+        return save(quiz);
+    }
+
+    @Override
     public List<QuizEntity> getAll() {
         return quizRepo.findAll();
     }

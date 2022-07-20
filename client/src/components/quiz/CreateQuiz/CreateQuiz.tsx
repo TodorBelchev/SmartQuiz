@@ -1,6 +1,6 @@
 import { Alert, Button, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Typography } from "@mui/material";
-import { FormEvent, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { FormEvent, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import useCallbackPrompt from "../../../hooks/useCallbackPrompt";
 import useHttp from "../../../hooks/useHttp";
 import { useAppSelector } from "../../../hooks/useRedux";
@@ -10,12 +10,18 @@ import quizOptions from "../../../utils/quizOptions";
 import validators from "../../../validators";
 import ConfirmDialog from "../../UI/ConfirmDialog/ConfirmDialog";
 
-const CreateQuiz: React.FC = () => {
+interface Props {
+    isEdit?: boolean;
+}
+
+const CreateQuiz: React.FC<Props> = ({ isEdit }) => {
     const { isLoading, sendRequest } = useHttp();
+    const { quizId } = useParams();
     const user = useAppSelector(state => state.auth);
     const navigate = useNavigate();
     const [showDialog, setShowDialog] = useState(false);
     const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(showDialog);
+    const [quiz, setQuiz] = useState<IQuiz | null>(null);
 
     const {
         value: titleValue,
@@ -23,7 +29,8 @@ const CreateQuiz: React.FC = () => {
         hasError: titleHasError,
         valueChangeHandler: titleChangeHandler,
         inputBlurHandler: titleBlurHandler,
-        reset: resetTitle
+        reset: resetTitle,
+        setValue: setTitle
     } = useUserInput(validators.minLength.bind(null, 5));
     const {
         value: categoryValue,
@@ -31,7 +38,8 @@ const CreateQuiz: React.FC = () => {
         hasError: categoryHasError,
         valueChangeHandler: categoryChangeHandler,
         inputBlurHandler: categoryBlurHandler,
-        reset: resetCategory
+        reset: resetCategory,
+        setValue: setCategory
     } = useUserInput(validators.minLength.bind(null, 1));
     const {
         value: durationValue,
@@ -39,8 +47,24 @@ const CreateQuiz: React.FC = () => {
         hasError: durationHasError,
         valueChangeHandler: durationChangeHandler,
         inputBlurHandler: durationBlurHandler,
-        reset: resetDuration
+        reset: resetDuration,
+        setValue: setDuration
     } = useUserInput(validators.minLength.bind(null, 1));
+
+    useEffect(() => {
+        if (isEdit) {
+            sendRequest(quizOptions.getById(quizId), (res: IQuiz) => {
+                setQuiz(res);
+                setTitle(res.title);
+                setCategory(res.category.name);
+                setDuration(res.duration.toString());
+            })
+        } else {
+            resetTitle();
+            resetDuration();
+            resetCategory();
+        }
+    }, [isEdit, quizId, sendRequest, setTitle, setCategory, setDuration, resetTitle, resetDuration, resetCategory]);
 
     const redirectHandler = (navigationAction: boolean | (() => void)) => {
         if (typeof navigationAction === 'function') {
@@ -73,9 +97,18 @@ const CreateQuiz: React.FC = () => {
             category: categoryValue,
             creator: Number(user._id)
         };
-        
+
         setShowDialog(false);
-        sendRequest(quizOptions.add(quiz), processResponse);
+
+        let options = quizOptions.add(quiz);
+        if (isEdit) {
+            options = quizOptions.edit(quizId!, quiz);
+        }
+        sendRequest(options, processResponse);
+    }
+
+    const cancelHandler = () => {
+        navigate(-1);
     }
 
     return (
@@ -89,7 +122,7 @@ const CreateQuiz: React.FC = () => {
                 onConfirm={() => redirectHandler(confirmNavigation)} />
             <Grid container spacing={3} textAlign='center'>
                 <Grid item xs={12}>
-                    <Typography variant='h3' component='h1'>Add quiz</Typography>
+                    <Typography variant='h3' component='h1'>{isEdit ? "Edit" : "Add"} quiz</Typography>
                 </Grid>
                 <Grid item xs={12}>
                     <TextField
@@ -127,10 +160,10 @@ const CreateQuiz: React.FC = () => {
                                 setShowDialog(true);
                             }}
                             onBlur={categoryBlurHandler} >
-                            <MenuItem value='JavaScript'>JavaScript</MenuItem>
-                            <MenuItem value='Java'>Java</MenuItem>
+                            <MenuItem value='JAVASCRIPT'>JavaScript</MenuItem>
+                            <MenuItem value='JAVA'>Java</MenuItem>
                             <MenuItem value='C#'>C#</MenuItem>
-                            <MenuItem value='Python'>Python</MenuItem>
+                            <MenuItem value='PYTHON'>Python</MenuItem>
                         </Select>
                     </FormControl>
                 </Grid>
@@ -168,7 +201,8 @@ const CreateQuiz: React.FC = () => {
                     </Alert>
                 </Grid>}
                 <Grid item xs={12}>
-                    <Button type='submit' variant='contained' disabled={!formIsValid || isLoading}>Submit</Button>
+                    <Button type='submit' variant='contained' disabled={!formIsValid || isLoading} sx={{ marginRight: 3 }}>Submit</Button>
+                    <Button variant='contained' color='error' disabled={isLoading} onClick={cancelHandler}>Cancel</Button>
                 </Grid>
             </Grid>
         </form>

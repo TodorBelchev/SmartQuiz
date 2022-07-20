@@ -1,5 +1,5 @@
 import { SelectChangeEvent } from "@mui/material";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 
 const useUserInput = (validator: (value: string) => {}) => {
     const [inputValue, setInputValue] = useState('');
@@ -16,10 +16,10 @@ const useUserInput = (validator: (value: string) => {}) => {
         setIsTouched(true);
     };
 
-    const reset = () => {
+    const reset = useCallback(() => {
         setInputValue('');
         setIsTouched(false);
-    };
+    }, []);
 
     return {
         value: inputValue,

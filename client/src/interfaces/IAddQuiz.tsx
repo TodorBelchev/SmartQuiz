@@ -1,10 +1,10 @@
 import IQuestion from "./IQuestion";
 
-export default interface IQuiz {
+export default interface IAddQuiz {
     id?: number;
     title: string;
     duration: number;
     creator: number;
-    category: { name: string };
+    category: string;
     questions?: IQuestion[];
 }

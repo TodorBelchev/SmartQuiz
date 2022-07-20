@@ -1,8 +1,8 @@
-import IQuiz from "../interfaces/IQuiz";
+import IAddQuiz from "../interfaces/IAddQuiz";
 
 const { REACT_APP_BASE_URL } = process.env;
 
-const add = (quiz: IQuiz) => {
+const add = (quiz: IAddQuiz) => {
     return {
         url: `${REACT_APP_BASE_URL}/quiz/add`,
         method: 'POST',
@@ -11,7 +11,18 @@ const add = (quiz: IQuiz) => {
         },
         body: JSON.stringify(quiz)
     }
-};
+}
+
+const edit = (quizId: string, quiz: IAddQuiz) => {
+    return {
+        url: `${REACT_APP_BASE_URL}/quiz/${quizId}/edit`,
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(quiz)
+    } 
+}
 
 const getAll = () => {
     return {
@@ -28,6 +39,7 @@ const getById = (id: string | undefined) => {
 
 const quizOptions = {
     add,
+    edit,
     getAll,
     getById
 }

@@ -14,4 +14,6 @@ public interface QuizService {
     QuizEntity getById(Long quizId);
 
     QuizEntity save(QuizEntity quiz);
+
+    QuizEntity editQuiz(Long quizId, AddQuizDTO addQuizDTO, BindingResult bindingResult);
 }

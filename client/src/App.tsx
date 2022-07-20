@@ -16,6 +16,7 @@ function App() {
         <Route path='/quizzes/add' element={<CreateQuiz />} />
         <Route path='/quizzes/all' element={<QuizList />} />
         <Route path='/quizzes/:quizId' element={<QuizDetails />} />
+        <Route path='/quizzes/:quizId/edit' element={<CreateQuiz isEdit={true} />} />
       </Routes>
     </Layout>
   );
