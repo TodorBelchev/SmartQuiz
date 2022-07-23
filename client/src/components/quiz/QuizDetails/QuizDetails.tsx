@@ -45,6 +45,9 @@ const QuizDetails: React.FC = () => {
                 <Link to={`/quizzes/${quizId}/edit`}>
                     <Button variant="contained" color="secondary">Edit quiz</Button>
                 </Link>
+                <Link to={`/quizzes/${quizId}/enroll`}>
+                    <Button variant="contained" color="secondary">Enroll quiz</Button>
+                </Link>
             </Grid>
             <AddQuestionDialog open={addQuestionDialogOpen} onAddQuestion={processResponse} onClose={closeQuestionDialog} quiz={quiz!} />
         </Grid>

@@ -21,7 +21,7 @@ const edit = (quizId: string, quiz: IAddQuiz) => {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify(quiz)
-    } 
+    }
 }
 
 const getAll = () => {
@@ -36,12 +36,24 @@ const getById = (id: string | undefined) => {
     }
 }
 
+const enroll = (quizId: number, selectedResponses: { questionId: number, responseId: number }[]) => {
+    return {
+        url: `${REACT_APP_BASE_URL}/quiz/${quizId}/enroll`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(selectedResponses)
+    }
+}
+
 
 const quizOptions = {
     add,
     edit,
     getAll,
-    getById
+    getById,
+    enroll
 }
 
 export default quizOptions;
