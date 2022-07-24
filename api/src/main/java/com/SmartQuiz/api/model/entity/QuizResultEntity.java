@@ -16,12 +16,16 @@ public class QuizResultEntity extends BaseEntity {
     @Percentage
     private BigDecimal result;
 
+    @OneToOne(fetch = FetchType.EAGER)
+    private QuizEntity quiz;
+
     public QuizResultEntity() {
     }
 
-    public QuizResultEntity(UserEntity user, BigDecimal result) {
+    public QuizResultEntity(UserEntity user, BigDecimal result, QuizEntity quizEntity) {
         this.user = user;
         this.result = result;
+        this.quiz = quizEntity;
     }
 
     public UserEntity getUser() {
@@ -38,5 +42,13 @@ public class QuizResultEntity extends BaseEntity {
 
     public void setResult(BigDecimal result) {
         this.result = result;
+    }
+
+    public QuizEntity getQuiz() {
+        return quiz;
+    }
+
+    public void setQuiz(QuizEntity quiz) {
+        this.quiz = quiz;
     }
 }

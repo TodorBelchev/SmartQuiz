@@ -43,7 +43,7 @@ const enroll = (quizId: number, selectedResponses: { questionId: number, respons
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(selectedResponses)
+        body: JSON.stringify({ responses: selectedResponses })
     }
 }
 

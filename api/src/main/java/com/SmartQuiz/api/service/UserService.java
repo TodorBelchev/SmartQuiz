@@ -24,4 +24,6 @@ public interface UserService {
     void init();
 
     UserEntity getByEmail(String email);
+
+    UserEntity getByUsername(String username);
 }

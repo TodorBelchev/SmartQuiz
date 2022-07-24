@@ -1,6 +1,7 @@
 package com.SmartQuiz.api.service;
 
 import com.SmartQuiz.api.model.dto.AddQuizDTO;
+import com.SmartQuiz.api.model.dto.EnrollQuizDTO;
 import com.SmartQuiz.api.model.entity.QuizEntity;
 import org.springframework.validation.BindingResult;
 
@@ -16,4 +17,6 @@ public interface QuizService {
     QuizEntity save(QuizEntity quiz);
 
     QuizEntity editQuiz(Long quizId, AddQuizDTO addQuizDTO, BindingResult bindingResult);
+
+    QuizEntity enroll(Long quizId, EnrollQuizDTO enrollQuizDTO);
 }

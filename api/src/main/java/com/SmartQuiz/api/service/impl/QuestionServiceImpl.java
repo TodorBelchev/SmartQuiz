@@ -16,9 +16,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -48,7 +46,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         QuestionEntity question = new QuestionEntity();
-        List<ResponseEntity> responses = new ArrayList<>();
+        Set<ResponseEntity> responses = new HashSet<>();
 
         addQuestionDTO.getQuestion().getResponses().forEach(r -> {
             ResponseEntity response = responseService.addResponse(modelMapper.map(r, ResponseEntity.class));
@@ -79,7 +77,7 @@ public class QuestionServiceImpl implements QuestionService {
         }
 
         QuestionEntity question = getById(questionId);
-        List<ResponseEntity> responses = new ArrayList<>();
+        Set<ResponseEntity> responses = new HashSet<>();
 
         for (int i = 0; i < 4; i++) {
             ResponseEntity response = responseService.getById(((ResponseEntity) question.getResponses().toArray()[i]).getId());
@@ -110,7 +108,7 @@ public class QuestionServiceImpl implements QuestionService {
     public QuizEntity deleteById(Long questionId, Long quizId) {
         QuizEntity quiz = quizService.getById(quizId);
         Collection<QuestionEntity> questions = quiz.getQuestions();
-        List<QuestionEntity> newQuestions = questions.stream().filter(q -> q.getId() != questionId).collect(Collectors.toList());
+        Set<QuestionEntity> newQuestions = questions.stream().filter(q -> q.getId() != questionId).collect(Collectors.toSet());
         quiz.setQuestions(newQuestions);
         QuizEntity save = quizService.save(quiz);
         questionRepo.deleteById(questionId);

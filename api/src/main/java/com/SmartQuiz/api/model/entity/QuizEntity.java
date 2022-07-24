@@ -5,6 +5,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "quizzes")
@@ -19,13 +21,10 @@ public class QuizEntity extends BaseEntity {
     private Long duration;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<QuestionEntity> questions;
+    private Set<QuestionEntity> questions;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private UserEntity creator;
-
-    @OneToMany(fetch = FetchType.EAGER)
-    private Collection<QuizResultEntity> results;
 
     @OneToOne(fetch = FetchType.EAGER)
     private CategoryEntity category;
@@ -33,12 +32,11 @@ public class QuizEntity extends BaseEntity {
     public QuizEntity() {
     }
 
-    public QuizEntity(String title, Collection<QuestionEntity> questions, UserEntity creator, CategoryEntity category, Long duration) {
+    public QuizEntity(String title, Set<QuestionEntity> questions, UserEntity creator, CategoryEntity category, Long duration) {
         this.title = title;
         this.questions = questions;
         this.creator = creator;
         this.category = category;
-        this.results = new ArrayList<>();
         this.duration = duration;
     }
 
@@ -50,11 +48,11 @@ public class QuizEntity extends BaseEntity {
         this.title = title;
     }
 
-    public Collection<QuestionEntity> getQuestions() {
+    public Set<QuestionEntity> getQuestions() {
         return questions;
     }
 
-    public void setQuestions(Collection<QuestionEntity> questions) {
+    public void setQuestions(Set<QuestionEntity> questions) {
         this.questions = questions;
     }
 
@@ -64,14 +62,6 @@ public class QuizEntity extends BaseEntity {
 
     public void setCreator(UserEntity creator) {
         this.creator = creator;
-    }
-
-    public Collection<QuizResultEntity> getResults() {
-        return results;
-    }
-
-    public void setResults(Collection<QuizResultEntity> results) {
-        this.results = results;
     }
 
     public CategoryEntity getCategory() {

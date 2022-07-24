@@ -99,6 +99,11 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
+    public UserEntity getByUsername(String username) {
+        return userRepo.findByUsername(username);
+    }
+
+    @Override
     public UserEntity getById(Long id) {
         Optional<UserEntity> user = userRepo.findById(id);
         if (user.isEmpty()) {

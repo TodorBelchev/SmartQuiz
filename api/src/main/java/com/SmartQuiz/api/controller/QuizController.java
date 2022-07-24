@@ -1,6 +1,7 @@
 package com.SmartQuiz.api.controller;
 
 import com.SmartQuiz.api.model.dto.AddQuizDTO;
+import com.SmartQuiz.api.model.dto.EnrollQuizDTO;
 import com.SmartQuiz.api.model.dto.QuizViewDTO;
 import com.SmartQuiz.api.service.QuizService;
 import org.modelmapper.ModelMapper;
@@ -47,7 +48,13 @@ public class QuizController {
     @PutMapping("/{quizId}/edit")
     public ResponseEntity<QuizViewDTO> editQuiz(@PathVariable Long quizId,
                                                 @RequestBody @Valid AddQuizDTO addQuizDTO, BindingResult bindingResult) {
-        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/"+ quizId + "/edit").toUriString());
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/" + quizId + "/edit").toUriString());
         return ResponseEntity.created(uri).body(modelMapper.map(quizService.editQuiz(quizId, addQuizDTO, bindingResult), QuizViewDTO.class));
+    }
+
+    @PostMapping("/{quizId}/enroll")
+    public ResponseEntity<QuizViewDTO> enrollQuiz(@PathVariable Long quizId, @RequestBody @Valid EnrollQuizDTO enrollQuizDTO) {
+        URI uri = URI.create(ServletUriComponentsBuilder.fromCurrentContextPath().path("/quiz/" + quizId + "/enroll").toUriString());
+        return ResponseEntity.created(uri).body(modelMapper.map(quizService.enroll(quizId, enrollQuizDTO), QuizViewDTO.class));
     }
 }

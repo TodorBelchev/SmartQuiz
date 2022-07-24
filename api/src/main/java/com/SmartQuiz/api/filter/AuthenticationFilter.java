@@ -45,7 +45,6 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     @Override
     protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response, AuthenticationException failed) throws IOException, ServletException {
         Map<String, String> responseBody = new HashMap<>();
-        System.out.println(failed.getMessage());
         responseBody.put("error", failed.getMessage());
         response.setContentType(APPLICATION_JSON_VALUE);
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
