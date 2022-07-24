@@ -127,13 +127,29 @@ public class QuizServiceImpl implements QuizService {
 
     @Override
     public List<QuizEntity> getAll() {
-        return quizRepo.findAll();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        List<QuizEntity> all = quizRepo.findAll();
+        all.forEach(q -> {
+            if (!q.getCreator().getUsername().equals(currentPrincipalName)) {
+                q.getQuestions().forEach(question -> question.setCorrectResponse(null));
+            }
+        });
+        return all;
     }
 
     @Override
     public QuizEntity getById(Long quizId) {
-        return quizRepo.findById(quizId)
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        QuizEntity quizEntity = quizRepo.findById(quizId)
                 .orElseThrow(() -> new ResourceNotFound(List.of(String.format("Quiz with id %d was not found!", quizId))));
+
+        if (!quizEntity.getCreator().getUsername().equals(currentPrincipalName)) {
+            quizEntity.getQuestions().forEach(question -> question.setCorrectResponse(null));
+        }
+
+        return quizEntity;
     }
 
     @Override

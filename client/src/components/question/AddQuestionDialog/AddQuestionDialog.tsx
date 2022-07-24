@@ -76,12 +76,14 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, onEditQuestio
     useEffect(() => {
         if (questionToEdit) {
             const correctResponse = questionToEdit.responses.find(x => x.id === questionToEdit.correctResponse);
+            const index = questionToEdit.responses.indexOf(correctResponse!);
+
             setTextValue(questionToEdit.text);
             setResponseOneValue(questionToEdit.responses[0].text);
             setResponseTwoValue(questionToEdit.responses[1].text);
             setResponseThreeValue(questionToEdit.responses[2].text);
             setResponseFourValue(questionToEdit.responses[3].text);
-            setCorrectResponseValue((Number(correctResponse?.id) - 1).toString() || '');
+            setCorrectResponseValue(index.toString() || '');
         }
     }, [questionToEdit, setTextValue, setResponseOneValue, setResponseTwoValue, setResponseThreeValue, setResponseFourValue, setCorrectResponseValue]);
 
