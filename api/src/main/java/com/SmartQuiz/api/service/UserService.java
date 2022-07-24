@@ -9,6 +9,7 @@ import org.springframework.validation.BindingResult;
 import java.util.List;
 
 public interface UserService {
+
     UserEntity saveUser(UserRegisterDTO user, BindingResult bindingResult);
 
     RoleEntity saveRole(RoleEntity role);

@@ -6,6 +6,7 @@ import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.entity.RoleEntity;
 import com.SmartQuiz.api.model.entity.UserEntity;
+import com.SmartQuiz.api.model.enums.RoleEnum;
 import com.SmartQuiz.api.repo.RoleRepo;
 import com.SmartQuiz.api.repo.UserRepo;
 import com.SmartQuiz.api.service.UserService;
@@ -72,6 +73,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
 
         UserEntity userEntity = modelMapper.map(user, UserEntity.class);
         userEntity.setPassword(passwordEncoder.encode(user.getPassword()));
+        RoleEntity role = roleRepo.findByName(RoleEnum.ROLE_USER);
+        userEntity.setRoles(List.of(role));
         return userRepo.save(userEntity);
     }
 
