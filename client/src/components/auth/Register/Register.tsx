@@ -53,12 +53,12 @@ const Register: React.FC = () => {
     }
 
     function processResponse(response: any) {
-        sendRequest(userOptions.login(usernameValue, passwordValue), () => {
+        sendRequest(userOptions.login(usernameValue, passwordValue), (res) => {
             resetUsername();
             resetEmail();
             resetPassword();
             resetConfirmPassword();
-            dispatch(authActions.login(response));
+            dispatch(authActions.login(res));
             navigate("/");
         });
     }
