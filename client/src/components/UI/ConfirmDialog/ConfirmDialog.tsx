@@ -5,7 +5,7 @@ interface Props {
     title: string;
     content: string;
     isLoading: boolean;
-    onClose: () => void;
+    onClose?: () => void;
     onConfirm: () => void;
 }
 
@@ -18,7 +18,7 @@ const ConfirmDialog: React.FC<Props> = ({ open, title, content, isLoading, onClo
                 <Typography>{content}</Typography>
             </DialogContent>
             <DialogActions>
-                <Button onClick={onClose} variant='contained' color='error'>Cancel</Button>
+                {onClose && <Button onClick={onClose} variant='contained' color='error'>Cancel</Button>}
                 <Button onClick={onConfirm} variant='contained' disabled={isLoading}>Confirm</Button>
             </DialogActions>
         </Dialog>

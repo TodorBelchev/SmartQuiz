@@ -13,7 +13,7 @@ public class JWTUtils {
     public static String createAccessToken(String username, String requestPath, List<String> roles) {
         return JWT.create()
                 .withSubject(username)
-                .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
                 .withIssuer(requestPath)
                 .withClaim("roles", roles)
                 .sign(getAlgorithm());
@@ -22,7 +22,7 @@ public class JWTUtils {
     public static String createRefreshToken(String username, String requestPath) {
         return JWT.create()
                 .withSubject(username)
-                .withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 60 * 60 * 1000))
                 .withIssuer(requestPath)
                 .sign(getAlgorithm());
     }
