@@ -1,5 +1,6 @@
 package com.SmartQuiz.api.controller.errors;
 
+import com.SmartQuiz.api.model.entity.InvalidTokenEntity;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -33,6 +34,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(QuizAlreadyEnrolled.class)
     public ResponseEntity<Object> handleQuizAlreadyEnrolledRequest(HttpServletRequest req, QuizAlreadyEnrolled ex) {
+        return buildResponse(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrors()));
+    }
+
+    @ExceptionHandler(InvalidTokenException.class)
+    public ResponseEntity<Object> handleInvalidTokenException(HttpServletRequest req, InvalidTokenException ex) {
         return buildResponse(new ErrorResponse(HttpStatus.BAD_REQUEST, ex.getErrors()));
     }
 

@@ -3,7 +3,7 @@ package com.SmartQuiz.api.controller;
 import com.SmartQuiz.api.model.dto.AddRoleToUserDTO;
 import com.SmartQuiz.api.model.dto.UserRegisterDTO;
 import com.SmartQuiz.api.model.dto.UserViewDTO;
-import com.SmartQuiz.api.model.entity.UserEntity;
+import com.SmartQuiz.api.service.InvalidTokenService;
 import com.SmartQuiz.api.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -22,10 +22,12 @@ public class UserController {
 
     private final UserService userService;
     private final ModelMapper modelMapper;
+    private final InvalidTokenService invalidTokenService;
 
-    public UserController(UserService userService, ModelMapper modelMapper) {
+    public UserController(UserService userService, ModelMapper modelMapper, InvalidTokenService invalidTokenService) {
         this.userService = userService;
         this.modelMapper = modelMapper;
+        this.invalidTokenService = invalidTokenService;
     }
 
     @GetMapping("/all")
@@ -45,6 +47,12 @@ public class UserController {
     @PostMapping("/role/addToUser")
     public ResponseEntity<Void> saveRole(@RequestBody @Valid AddRoleToUserDTO addRoleToUserDTO) {
         userService.addRoleToUser(addRoleToUserDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/logout")
+    public ResponseEntity<Void> logout(@RequestBody String token) {
+        invalidTokenService.addToken(token);
         return ResponseEntity.ok().build();
     }
 }

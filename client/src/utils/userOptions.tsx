@@ -31,12 +31,19 @@ const register = (username: string, email: string, password: string, confirmPass
     }
 };
 
-const logout = () => {
-    return { url: `${REACT_APP_BASE_URL}/users/logout` };
+const logout = (token: string) => {
+    return {
+        url: `${REACT_APP_BASE_URL}/user/logout`,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: token
+    };
 };
 
 const verify = () => {
-    return { url: `${REACT_APP_BASE_URL}/users/verify` }
+    return { url: `${REACT_APP_BASE_URL}/user/verify` }
 }
 
 const userOptions = {

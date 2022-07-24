@@ -10,6 +10,7 @@ import java.util.List;
 
 @Component
 public class JWTUtils {
+
     public static String createAccessToken(String username, String requestPath, List<String> roles) {
         return JWT.create()
                 .withSubject(username)

@@ -3,6 +3,7 @@ package com.SmartQuiz.api.config;
 import com.SmartQuiz.api.filter.AuthenticationFilter;
 import com.SmartQuiz.api.filter.AuthorizationFilter;
 import com.SmartQuiz.api.repo.UserRepo;
+import com.SmartQuiz.api.service.InvalidTokenService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -24,11 +25,13 @@ public class AppSecurityConfig {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
     private final UserRepo userRepo;
+    private final InvalidTokenService invalidTokenService;
 
-    public AppSecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserRepo userRepo) {
+    public AppSecurityConfig(UserDetailsService userDetailsService, PasswordEncoder passwordEncoder, UserRepo userRepo, InvalidTokenService invalidTokenService) {
         this.userDetailsService = userDetailsService;
         this.passwordEncoder = passwordEncoder;
         this.userRepo = userRepo;
+        this.invalidTokenService = invalidTokenService;
     }
 
     @Bean
@@ -46,7 +49,7 @@ public class AppSecurityConfig {
         http.authorizeRequests().antMatchers("/user/login", "/user/register").permitAll();
         http.authorizeRequests().anyRequest().authenticated();
         http.addFilter(authFilter);
-        http.addFilterBefore(new AuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AuthorizationFilter(invalidTokenService), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

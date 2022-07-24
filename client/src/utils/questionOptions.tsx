@@ -1,5 +1,4 @@
 import IQuestion from "../interfaces/IQuestion";
-import IQuiz from "../interfaces/IQuiz";
 
 const { REACT_APP_BASE_URL } = process.env;
 

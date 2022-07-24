@@ -2,10 +2,13 @@ import { AppBar, Box, Button, Divider, Drawer, IconButton, List, ListItem, ListI
 import MenuIcon from '@mui/icons-material/Menu';
 import React from "react";
 import { Container } from "@mui/system";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import classes from './Navigation.module.css';
-import { useAppSelector } from "../../../hooks/useRedux";
+import { useAppDispatch, useAppSelector } from "../../../hooks/useRedux";
 import FadeMenu from "../../UI/FadeMenu/FadeMenu";
+import useHttp from "../../../hooks/useHttp";
+import userOptions from "../../../utils/userOptions";
+import { authActions } from "../../../store/auth";
 
 interface Props {
     window?: () => Window;
@@ -18,10 +21,20 @@ const Navigation: React.FC<Props> = (props: Props) => {
     const { window, children } = props;
     const [mobileOpen, setMobileOpen] = React.useState(false);
     const user = useAppSelector(state => state.auth);
+    const dispatch = useAppDispatch();
+    const { sendRequest } = useHttp();
+    const navigate = useNavigate();
 
     const handleDrawerToggle = () => {
         setMobileOpen(!mobileOpen);
     };
+
+    const logoutHandler = (e: React.MouseEvent) => {
+        e.preventDefault();
+        sendRequest(userOptions.logout(user.access_token!), () => { });
+        dispatch(authActions.logout());
+        navigate('/');
+    }
 
     const drawer = (
         <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -86,7 +99,7 @@ const Navigation: React.FC<Props> = (props: Props) => {
                 </ListItem>}
                 {user._id !== null && <ListItem disablePadding>
                     <ListItemButton sx={{ textAlign: 'center' }}>
-                        <Link to={`/user/${user._id}/logout`} className={classes.link}>
+                        <Link to={`/user/${user._id}/logout`} onClick={logoutHandler} className={classes.link}>
                             <ListItemText primary='Logout' />
                         </Link>
                     </ListItemButton>
@@ -143,7 +156,7 @@ const Navigation: React.FC<Props> = (props: Props) => {
                                 </Button>
                             </Link>
                         </Box>}
-                        {user._id !== null && <FadeMenu title="Profile" items={[{ text: `${user.username}`, to: `/user/${user._id}` }, { text: 'Logout', to: `/user/${user._id}/logout` }]} />}
+                        {user._id !== null && <FadeMenu title="Profile" items={[{ text: `${user.username}`, to: `/user/${user._id}` }, { text: 'Logout', to: `/user/${user._id}/logout`, onClick: logoutHandler }]} />}
                         {user._id === null && <Box sx={{ display: { xs: 'none', sm: 'block' }, minWidth: '75px' }}>
                             <Link to="/user/login">
                                 <Button sx={{ color: '#fff' }}>

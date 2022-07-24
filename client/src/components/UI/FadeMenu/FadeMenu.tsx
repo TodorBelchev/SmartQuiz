@@ -46,7 +46,8 @@ const FadeMenu: React.FC<Props> = ({ items, title }) => {
             >
                 {items.map(i => (
                     <MenuItem key={i.to} onClick={handleClose}>
-                        <Link to={i.to}>{i.text}</Link>
+                        {i.onClick === undefined && <Link to={i.to}>{i.text}</Link>}
+                        {i.onClick !== undefined && <Link to={i.to} onClick={i.onClick}>{i.text}</Link>}
                     </MenuItem>
                 ))}
             </Menu>

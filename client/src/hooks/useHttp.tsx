@@ -33,6 +33,11 @@ const useHttp = () => {
                 throw new Error(JSON.stringify(["Invalid credentials"]));
             }
 
+            if (response.ok && requestConfig.url.endsWith("/logout")) {
+                setIsLoading(false);
+                return;
+            }
+            
             const data = await response.json();
 
             if (!response.ok) { throw new Error(JSON.stringify(data.messages)); }
