@@ -17,7 +17,7 @@ public class QuizViewDTO {
 
     private Collection<QuestionEntity> questions;
 
-    private UserEntity creator;
+    private UserViewDTO creator;
 
     private Collection<QuizResultEntity> results;
 
@@ -55,11 +55,11 @@ public class QuizViewDTO {
         this.questions = questions;
     }
 
-    public UserEntity getCreator() {
+    public UserViewDTO getCreator() {
         return creator;
     }
 
-    public void setCreator(UserEntity creator) {
+    public void setCreator(UserViewDTO creator) {
         this.creator = creator;
     }
 
