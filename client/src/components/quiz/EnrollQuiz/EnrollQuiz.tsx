@@ -1,6 +1,7 @@
 import { Box, Stepper, Typography, Step, StepLabel, Button, StepContent } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import useCallbackPrompt from "../../../hooks/useCallbackPrompt";
 import useHttp from "../../../hooks/useHttp";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useRedux";
 import useWindowDimensions from "../../../hooks/useWindowDimensions";
@@ -21,7 +22,10 @@ const EnrollQuiz: React.FC = () => {
     const { isLoading, sendRequest } = useHttp();
     const dispatch = useAppDispatch();
     const { quiz, selectedResponses } = useAppSelector(state => state.quiz);
-    const { height, width } = useWindowDimensions();
+    const [showDialog, setShowDialog] = useState(false);
+    const [showRedirectDialog, setShowRedirectDialog] = useState(true);
+    const [showPrompt, confirmNavigation, cancelNavigation] = useCallbackPrompt(showRedirectDialog);
+    const { width } = useWindowDimensions();
 
     useEffect(() => {
         sendRequest(quizOptions.getById(quizId), (res: IQuiz) => {
@@ -44,7 +48,7 @@ const EnrollQuiz: React.FC = () => {
 
     const handleNext = () => {
         if (activeStep === (quiz.questions && quiz.questions.length - 1)) {
-            submitHandler();
+            setShowDialog(true);
         } else {
             setActiveStep((prevActiveStep) => prevActiveStep + 1);
         }
@@ -55,12 +59,38 @@ const EnrollQuiz: React.FC = () => {
     }
 
     const expiredTimeHandler = () => {
+        submitHandler();
         setShowConfirm(true);
         submitHandler();
     }
 
+    const redirectHandler = (confirm: boolean, navigationAction: boolean | (() => void)) => {
+        if (confirm) {
+            setShowRedirectDialog(false);
+            submitHandler();
+        }
+        if (typeof navigationAction === 'function') {
+            navigationAction();
+        }
+        return navigationAction;
+    }
+
     return (
         <Box>
+            {showDialog && <ConfirmDialog
+                open={showDialog}
+                content="Are you sure you want to submit?"
+                title="Confirm submit"
+                isLoading={isLoading}
+                onConfirm={submitHandler}
+                onClose={() => setShowDialog(false)} />}
+            <ConfirmDialog
+                open={!!showPrompt}
+                content="Your submission will be send and quiz will be completed. Are you sure you want to leave?"
+                title="Warning"
+                isLoading={isLoading}
+                onClose={() => redirectHandler(false, cancelNavigation)}
+                onConfirm={() => redirectHandler(true, confirmNavigation)} />
             {quiz.duration && <Box>
                 <CountdownTimer initialMinute={quiz.duration} initialSeconds={0} expiredTimeHandler={expiredTimeHandler} />
             </Box>}
@@ -92,7 +122,7 @@ const EnrollQuiz: React.FC = () => {
                         <StepLabel>
                         </StepLabel>
                         <StepContent>
-                            <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />
+                            {quiz.questions && quiz.questions[activeStep] && <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />}
                             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flexBasis: '100%' }}>
                                 <Button
                                     color="inherit"
@@ -113,7 +143,7 @@ const EnrollQuiz: React.FC = () => {
             </Stepper>}
             {width >= 1200 && <Fragment>
                 <Box>
-                    <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />
+                    {quiz.questions && quiz.questions[activeStep] && <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />}
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flexBasis: '100%' }}>
                     <Button

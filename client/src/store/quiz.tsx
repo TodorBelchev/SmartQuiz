@@ -29,7 +29,8 @@ const quizSlice = createSlice({
             state.selectedResponses = action.payload;
         },
         clean(state) {
-            state = initialQuizState;
+            state.quiz = initialQuizState.quiz;
+            state.selectedResponses = initialQuizState.selectedResponses;
         }
     }
 });
