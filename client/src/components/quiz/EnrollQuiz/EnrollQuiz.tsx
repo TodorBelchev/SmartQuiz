@@ -1,8 +1,9 @@
-import { Box, Stepper, Typography, Step, StepLabel, Button } from "@mui/material";
+import { Box, Stepper, Typography, Step, StepLabel, Button, StepContent } from "@mui/material";
 import { useState, Fragment, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import useHttp from "../../../hooks/useHttp";
 import { useAppDispatch, useAppSelector } from "../../../hooks/useRedux";
+import useWindowDimensions from "../../../hooks/useWindowDimensions";
 import IQuiz from "../../../interfaces/IQuiz";
 import IQuizState from "../../../interfaces/IQuizState";
 import { quizActions } from "../../../store/quiz";
@@ -20,6 +21,7 @@ const EnrollQuiz: React.FC = () => {
     const { isLoading, sendRequest } = useHttp();
     const dispatch = useAppDispatch();
     const { quiz, selectedResponses } = useAppSelector(state => state.quiz);
+    const { height, width } = useWindowDimensions();
 
     useEffect(() => {
         sendRequest(quizOptions.getById(quizId), (res: IQuiz) => {
@@ -58,7 +60,7 @@ const EnrollQuiz: React.FC = () => {
     }
 
     return (
-        <Box sx={{ width: '100%' }}>
+        <Box>
             {quiz.duration && <Box>
                 <CountdownTimer initialMinute={quiz.duration} initialSeconds={0} expiredTimeHandler={expiredTimeHandler} />
             </Box>}
@@ -71,7 +73,7 @@ const EnrollQuiz: React.FC = () => {
                     setShowConfirm(false);
                 }}
             />}
-            <Stepper activeStep={activeStep}>
+            {width >= 1200 && <Stepper activeStep={activeStep}>
                 {quiz.questions && quiz.questions.map((question, index) => {
                     const stepProps: { completed?: boolean } = {};
                     const labelProps: {
@@ -79,40 +81,56 @@ const EnrollQuiz: React.FC = () => {
                     } = {};
                     return (
                         <Step key={index} {...stepProps}>
-                            <StepLabel {...labelProps}>{question.text}</StepLabel>
+                            <StepLabel {...labelProps}></StepLabel>
                         </Step>
                     );
                 })}
-            </Stepper>
-            {activeStep === (quiz.questions && quiz.questions.length) ? (
-                <Fragment>
-                    <Typography sx={{ mt: 2, mb: 1 }}>
-                        All steps completed - you&apos;re finished
-                    </Typography>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                        <Box sx={{ flex: '1 1 auto' }} />
-                    </Box>
-                </Fragment>
-            ) : (
-                <Fragment>
+            </Stepper>}
+            {width < 1200 && <Stepper activeStep={activeStep} orientation="vertical">
+                {quiz.questions && quiz.questions.map((question, index) => (
+                    <Step key={question.id}>
+                        <StepLabel>
+                        </StepLabel>
+                        <StepContent>
+                            <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />
+                            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flexBasis: '100%' }}>
+                                <Button
+                                    color="inherit"
+                                    disabled={activeStep === 0}
+                                    onClick={handleBack}
+                                    sx={{ mr: 1 }}
+                                >
+                                    Back
+                                </Button>
+                                <Box sx={{ flex: '1 1 auto' }} />
+                                <Button onClick={handleNext}>
+                                    {activeStep === (quiz.questions && quiz.questions.length - 1) ? 'Finish' : 'Next'}
+                                </Button>
+                            </Box>
+                        </StepContent>
+                    </Step>
+                ))}
+            </Stepper>}
+            {width >= 1200 && <Fragment>
+                <Box>
                     <EnrollQuizQuestionCard question={quiz.questions && quiz.questions[activeStep]} />
-                    <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-                        <Button
-                            color="inherit"
-                            disabled={activeStep === 0}
-                            onClick={handleBack}
-                            sx={{ mr: 1 }}
-                        >
-                            Back
-                        </Button>
-                        <Box sx={{ flex: '1 1 auto' }} />
-                        <Button onClick={handleNext}>
-                            {activeStep === (quiz.questions && quiz.questions.length - 1) ? 'Finish' : 'Next'}
-                        </Button>
-                    </Box>
-                </Fragment>
-            )}
-        </Box>
+                </Box>
+                <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2, flexBasis: '100%' }}>
+                    <Button
+                        color="inherit"
+                        disabled={activeStep === 0}
+                        onClick={handleBack}
+                        sx={{ mr: 1 }}
+                    >
+                        Back
+                    </Button>
+                    <Box sx={{ flex: '1 1 auto' }} />
+                    <Button onClick={handleNext}>
+                        {activeStep === (quiz.questions && quiz.questions.length - 1) ? 'Finish' : 'Next'}
+                    </Button>
+                </Box>
+            </Fragment>}
+        </Box >
     )
 }
 

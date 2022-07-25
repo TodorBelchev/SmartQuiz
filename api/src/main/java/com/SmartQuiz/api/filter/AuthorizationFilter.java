@@ -47,7 +47,6 @@ public class AuthorizationFilter extends OncePerRequestFilter {
                     InvalidTokenEntity invalidTokenEntity = invalidTokenService.findByToken(token);
 
                     if (invalidTokenEntity != null) {
-                        System.out.println("here");
                         throw new RuntimeException(String.format("Token '%s' is invalid!", token));
                     }
 

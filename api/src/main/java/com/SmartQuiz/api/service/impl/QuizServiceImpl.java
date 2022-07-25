@@ -115,7 +115,11 @@ public class QuizServiceImpl implements QuizService {
                 }
             }
         }
-        double result = (quizEntity.getQuestions().size() / correctResponses) * 100;
+
+        double result = 0;
+        if (correctResponses != 0) {
+            result = (quizEntity.getQuestions().size() / correctResponses) * 100;
+        }
 
         quizResultEntity = new QuizResultEntity();
         quizResultEntity.setUser(userEntity);
