@@ -129,18 +129,20 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, onEditQuestio
     }
 
     const closeHandler = () => {
-        resetText();
-        resetCorrectResponse();
-        resetResponseOne();
-        resetResponseTwo();
-        resetResponseThree();
-        resetResponseFour();
+        if (!questionToEdit) {
+            resetText();
+            resetCorrectResponse();
+            resetResponseOne();
+            resetResponseTwo();
+            resetResponseThree();
+            resetResponseFour();
+        }
 
         onClose();
     }
 
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={closeHandler}>
             <DialogTitle sx={{ textAlign: 'center' }}>{questionToEdit ? 'Edit' : 'Add'} question</DialogTitle>
             <DialogContent>
                 <TextField
@@ -236,7 +238,7 @@ const AddQuestionDialog: React.FC<Props> = ({ open, quiz, onClose, onEditQuestio
                     </Alert>}
             </DialogContent>
             <DialogActions sx={{ padding: '20px' }}>
-                <Button onClick={onClose} variant='contained' color='error'>Cancel</Button>
+                <Button onClick={closeHandler} variant='contained' color='error'>Cancel</Button>
                 <Button onClick={onSubmit} variant='contained' disabled={!formIsValid}>{questionToEdit ? 'Edit' : 'Add'}</Button>
             </DialogActions>
         </Dialog>

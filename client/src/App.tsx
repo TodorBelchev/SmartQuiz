@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import CreateArticle from './components/article/CreateArticle/CreateArticle';
 import Login from './components/auth/Login/Login';
 import Register from './components/auth/Register/Register';
 import Layout from './components/layout/Layout/Layout';
@@ -19,6 +20,7 @@ function App() {
         <Route path='/quizzes/:quizId' element={<QuizDetails />} />
         <Route path='/quizzes/:quizId/edit' element={<CreateQuiz isEdit={true} />} />
         <Route path='/quizzes/:quizId/enroll' element={<EnrollQuiz />} />
+        <Route path='/articles/add' element={<CreateArticle />} />
       </Routes>
     </Layout>
   );
