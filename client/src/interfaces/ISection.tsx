@@ -1,6 +1,7 @@
 export default interface ISection {
     id: number;
-    title: string;
+    title?: string;
+    text: string;
     subTitle?: string;
-    imageUrl?: string;
+    gistUrl?: string;
 }

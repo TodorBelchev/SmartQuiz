@@ -1,0 +1,7 @@
+.input-file {
+    display: none;
+}
+
+.file-upload-success:hover {
+    cursor: default;
+}
